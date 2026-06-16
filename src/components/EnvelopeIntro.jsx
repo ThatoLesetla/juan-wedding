@@ -1,0 +1,322 @@
+import { useState, useEffect, useCallback } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+
+// ─── phases: "idle" → "opening" → "rising" → "ready" → "exiting" ─────────────
+export default function EnvelopeIntro({ onComplete }) {
+  const [phase, setPhase] = useState("idle");
+  const prefersReduced = useReducedMotion();
+
+  // ── Lock body scroll while intro is active ──────────────────────────────────
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
+
+  // ── Keyboard accessibility ──────────────────────────────────────────────────
+  const doOpen = useCallback(() => {
+    if (phase !== "idle") return;
+    if (prefersReduced) {
+      // Respect reduced-motion: skip straight to website
+      setPhase("exiting");
+      return;
+    }
+    setPhase("opening");
+    setTimeout(() => setPhase("rising"), 700);
+    setTimeout(() => setPhase("ready"), 1500);
+  }, [phase, prefersReduced]);
+
+  const doExit = useCallback(() => {
+    if (phase === "exiting") return;
+    setPhase("exiting");
+  }, [phase]);
+
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (e.key === "Escape") {
+        doExit();
+      } else if ((e.key === "Enter" || e.key === " ") && phase === "idle") {
+        e.preventDefault();
+        doOpen();
+      }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [phase, doOpen, doExit]);
+
+  // ── Derived state ───────────────────────────────────────────────────────────
+  const isOpen   = phase !== "idle";
+  const cardRisen = phase === "rising" || phase === "ready";
+
+  return (
+    <AnimatePresence
+      onExitComplete={() => {
+        document.body.style.overflow = "";
+        onComplete();
+      }}
+    >
+      {phase !== "exiting" && (
+        <motion.div
+          key="envelope-intro"
+          className="fixed inset-0 z-[200] flex select-none flex-col items-center justify-center"
+          style={{ background: "linear-gradient(145deg, #faf7f2 0%, #ede0f8 42%, #faf7f2 100%)" }}
+          exit={{ opacity: 0, transition: { duration: 0.85, ease: "easeInOut" } }}
+        >
+          {/* ── Ambient blobs ── */}
+          <div className="pointer-events-none absolute inset-0 overflow-hidden">
+            <div className="absolute -left-28 top-0 h-[30rem] w-[30rem] rounded-full bg-[#D8C4F1]/55 blur-[110px]" />
+            <div className="absolute -right-28 bottom-0 h-[34rem] w-[34rem] rounded-full bg-[#D4AF37]/10 blur-[110px]" />
+            <div className="absolute left-1/3 top-1/4 h-80 w-80 rounded-full bg-[#D8C4F1]/22 blur-[70px]" />
+          </div>
+
+          {/* ── Skip button ── */}
+          <button
+            onClick={doExit}
+            className="absolute right-5 top-5 z-10 rounded-full border border-[#D8C4F1] bg-white/50 px-4 py-1.5 text-[10px] uppercase tracking-[0.45em] text-[#7B6A9C] backdrop-blur-sm transition-all hover:border-[#D4AF37] hover:text-[#2D1B5E] focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
+            aria-label="Skip intro"
+          >
+            Skip
+          </button>
+
+          <div className="flex flex-col items-center px-4">
+            {/* ── Eyebrow ── */}
+            <motion.p
+              className="mb-7 text-center text-[10px] uppercase tracking-[0.7em] text-[#9B8BBE]"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.65 }}
+            >
+              You are cordially invited
+            </motion.p>
+
+            {/* ─────────────────────── ENVELOPE SCENE ─────────────────────── */}
+            <motion.div
+              className={phase === "idle" ? "relative cursor-pointer" : "relative"}
+              style={{
+                width: "min(380px, 90vw)",
+                height: "min(260px, calc(90vw * 0.684))",
+              }}
+              initial={{ opacity: 0, y: 44, scale: 0.93 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ delay: 0.42, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={phase === "idle" ? { y: -5, transition: { duration: 0.3 } } : undefined}
+              onClick={phase === "idle" ? doOpen : undefined}
+              role={phase === "idle" ? "button" : undefined}
+              tabIndex={phase === "idle" ? 0 : undefined}
+              onKeyDown={
+                phase === "idle"
+                  ? (e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        doOpen();
+                      }
+                    }
+                  : undefined
+              }
+              aria-label={phase === "idle" ? "Open the invitation" : undefined}
+            >
+              {/* 3-D perspective wrapper */}
+              <div
+                className="absolute inset-0"
+                style={{ perspective: "1200px", perspectiveOrigin: "50% 10%" }}
+              >
+                {/* ── Envelope back body ── */}
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background: "linear-gradient(155deg, #3D2878 0%, #2D1B5E 100%)",
+                    borderRadius: 6,
+                    boxShadow: [
+                      "0 44px 90px rgba(45,27,94,0.62)",
+                      "0 10px 30px rgba(45,27,94,0.38)",
+                      "inset 0 0 0 1.5px rgba(212,175,55,0.28)",
+                    ].join(", "),
+                  }}
+                />
+
+                {/* ── Bottom V – interior darkening ── */}
+                <div
+                  className="absolute inset-x-0 bottom-0"
+                  style={{
+                    height: "55%",
+                    background: "linear-gradient(180deg, #1b0d39 0%, #100829 100%)",
+                    clipPath: "polygon(0 100%, 50% 0%, 100% 100%)",
+                    zIndex: 2,
+                  }}
+                />
+
+                {/* ── Left wing ── */}
+                <div
+                  className="absolute inset-y-0 left-0"
+                  style={{
+                    width: "51%",
+                    background: "#33236a",
+                    clipPath: "polygon(0 0, 100% 50%, 0 100%)",
+                    zIndex: 3,
+                    filter: "brightness(0.78)",
+                  }}
+                />
+
+                {/* ── Right wing ── */}
+                <div
+                  className="absolute inset-y-0 right-0"
+                  style={{
+                    width: "51%",
+                    background: "#33236a",
+                    clipPath: "polygon(100% 0, 0 50%, 100% 100%)",
+                    zIndex: 3,
+                    filter: "brightness(0.78)",
+                  }}
+                />
+
+                {/* ── INVITATION CARD ── */}
+                <motion.div
+                  className="absolute"
+                  style={{
+                    top: "28%",
+                    left: "50%",
+                    x: "-50%",
+                    width: "82%",
+                    zIndex: 6,
+                  }}
+                  animate={{ y: cardRisen ? -220 : 0 }}
+                  transition={{ duration: 0.78, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <div
+                    className="rounded-lg px-5 py-5 text-center"
+                    style={{
+                      background: "linear-gradient(170deg, #FFFFFF 0%, #FAF7F2 100%)",
+                      border: "1.5px solid rgba(212,175,55,0.42)",
+                      boxShadow: [
+                        "0 24px 60px rgba(45,27,94,0.28)",
+                        "0 6px 20px rgba(212,175,55,0.13)",
+                      ].join(", "),
+                    }}
+                  >
+                    <p className="font-serif text-lg text-[#D8C4F1]">❀ ✦ ❀</p>
+                    <h2
+                      className="mt-1.5 font-serif text-[#2D1B5E]"
+                      style={{ fontSize: "clamp(1.1rem, 4vw, 1.75rem)", lineHeight: 1.2 }}
+                    >
+                      Juan & Taylor
+                    </h2>
+                    <div className="mx-auto my-2.5 h-px w-12 bg-[#D4AF37]" />
+                    <p
+                      className="uppercase tracking-[0.38em] text-[#D4AF37]"
+                      style={{ fontSize: "clamp(0.5rem, 1.4vw, 0.63rem)" }}
+                    >
+                      7 November 2026
+                    </p>
+                    <p
+                      className="mt-1 text-[#7B6A9C]"
+                      style={{ fontSize: "clamp(0.55rem, 1.4vw, 0.65rem)" }}
+                    >
+                      Nantes Estate · Paarl, South Africa
+                    </p>
+
+                    {/* Enter Website button – appears once card is fully risen */}
+                    <AnimatePresence>
+                      {phase === "ready" && (
+                        <motion.button
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.4 }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            doExit();
+                          }}
+                          className="mt-4 w-full rounded-full bg-[#2D1B5E] py-2.5 text-[10px] uppercase tracking-[0.4em] text-white shadow-md transition-all hover:bg-[#3D2878] hover:shadow-lg active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
+                          aria-label="Enter website"
+                        >
+                          Enter Website
+                        </motion.button>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </motion.div>
+
+                {/* ── TOP FLAP (the one that opens) ── */}
+                <motion.div
+                  className="absolute inset-x-0 top-0"
+                  style={{
+                    height: "52%",
+                    clipPath: "polygon(0 0, 100% 0, 50% 100%)",
+                    transformOrigin: "50% 0%",
+                    zIndex: 10,
+                    background: "linear-gradient(175deg, #4A3470 0%, #3D2878 70%, #2e1f60 100%)",
+                    willChange: "transform, opacity",
+                    filter: "drop-shadow(0 6px 14px rgba(45,27,94,0.40))",
+                  }}
+                  animate={{
+                    rotateX: isOpen ? -155 : 0,
+                    opacity: isOpen ? 0 : 1,
+                  }}
+                  transition={{
+                    rotateX: { duration: 0.62, ease: [0.4, 0, 0.15, 1] },
+                    opacity: { duration: 0.48, delay: 0.12 },
+                  }}
+                />
+
+                {/* ── WAX SEAL ── */}
+                <AnimatePresence>
+                  {!isOpen && (
+                    <motion.div
+                      exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.22 } }}
+                      className="pointer-events-none absolute z-[15]"
+                      style={{ top: "44%", left: "50%", x: "-50%", y: "-50%" }}
+                    >
+                      <div
+                        className="flex h-12 w-12 items-center justify-center rounded-full"
+                        style={{
+                          background: "radial-gradient(circle at 33% 33%, #EDCD4A, #B8921E)",
+                          boxShadow: [
+                            "0 4px 18px rgba(180,140,20,0.58)",
+                            "inset 0 1.5px 3px rgba(255,255,255,0.35)",
+                            "inset 0 -1px 2px rgba(0,0,0,0.22)",
+                          ].join(", "),
+                        }}
+                      >
+                        <span className="font-serif text-[11px] font-semibold leading-none text-[#2D1B5E]">
+                          J&T
+                        </span>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </motion.div>
+            {/* ── END ENVELOPE SCENE ── */}
+
+            {/* ── "Open Invitation" button (below envelope) ── */}
+            <AnimatePresence>
+              {phase === "idle" && (
+                <motion.div
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8, transition: { duration: 0.2 } }}
+                  transition={{ delay: 1, duration: 0.6 }}
+                  className="mt-10 flex flex-col items-center gap-2.5"
+                >
+                  <motion.button
+                    onClick={doOpen}
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.96 }}
+                    className="rounded-full bg-[#2D1B5E] px-10 py-3.5 text-xs uppercase tracking-[0.45em] text-white shadow-xl transition-colors hover:bg-[#3D2878] focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:ring-offset-2 focus:ring-offset-transparent"
+                    aria-label="Open invitation"
+                  >
+                    Open Invitation
+                  </motion.button>
+                  <p className="text-[9px] uppercase tracking-[0.5em] text-[#B0A0CC]">
+                    Press Enter or Space
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}

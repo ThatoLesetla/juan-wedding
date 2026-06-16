@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import EnvelopeIntro from "./components/EnvelopeIntro";
 import {
   Calendar, MapPin, Music, Gift, Heart, Mail,
   Volume2, VolumeX, X, Sparkles,
@@ -13,23 +14,25 @@ const cn = (...classes) => classes.filter(Boolean).join(" ");
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 const journeyPhotos = [
-  "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1505944357431-27579db47558?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=900&q=80",
+  "/IMG_7344.JPG",
+  "/IMG_7346.JPG",
+  "/IMG_7424.JPG",
+  "/IMG_7432.JPG",
+  "/IMG_7433.JPG",
+  "/IMG_7434.JPG",
+  "/IMG_7458.JPG",
+  "/IMG_7459.JPG",
 ];
 
 const gallery = [
-  "https://images.unsplash.com/photo-1537633552985-df8429e8048b?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1606216794074-735e91aa2c92?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=900&q=80",
+  "/IMG_7344.JPG",
+  "/IMG_7346.JPG",
+  "/IMG_7424.JPG",
+  "/IMG_7432.JPG",
+  "/IMG_7433.JPG",
+  "/IMG_7434.JPG",
+  "/IMG_7458.JPG",
+  "/IMG_7459.JPG",
 ];
 
 const accommodation = [
@@ -138,6 +141,7 @@ function GoldDivider() {
 
 // ─── Main component ───────────────────────────────────────────────────────────
 export default function WeddingWebsite() {
+  const [introComplete, setIntroComplete] = useState(false);
   const [musicOn, setMusicOn] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [rsvpSent, setRsvpSent] = useState(false);
@@ -149,6 +153,10 @@ export default function WeddingWebsite() {
   });
 
   return (
+    <>
+      {!introComplete && (
+        <EnvelopeIntro onComplete={() => setIntroComplete(true)} />
+      )}
     <main className="min-h-screen scroll-smooth">
       <div className="min-h-screen overflow-hidden bg-[#FAF7F2] text-[#2D1B5E]">
 
@@ -190,7 +198,7 @@ export default function WeddingWebsite() {
         {/* ── HERO ── */}
         <header
           id="home"
-          className="relative z-10 flex min-h-screen items-center justify-center bg-[url('https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=1800&q=90')] bg-cover bg-center px-4 text-center"
+          className="relative z-10 flex min-h-screen items-center justify-center bg-[url('/IMG_7459.JPG')] bg-cover bg-center px-4 text-center"
         >
           <div className="absolute inset-0 bg-gradient-to-b from-[#2D1B5E]/55 via-[#2D1B5E]/30 to-[#FAF7F2]" />
           <motion.div
@@ -646,10 +654,10 @@ export default function WeddingWebsite() {
                     <div className="rounded-[1.5rem] bg-white/10 p-6 backdrop-blur border border-white/10">
                       <p className="text-xs uppercase tracking-[0.3em] text-[#D4AF37] mb-3">EFT Details</p>
                       <div className="space-y-2 text-sm text-white/80">
-                        <p><span className="text-white font-medium">Account Name:</span> Juan & Taylor</p>
-                        <p><span className="text-white font-medium">Bank:</span> [Bank name]</p>
-                        <p><span className="text-white font-medium">Account No:</span> [Account number]</p>
-                        <p><span className="text-white font-medium">Reference:</span> Honeymoon Fund</p>
+                        <p><span className="text-white font-medium">Account Name:</span> Miss TN Brown</p>
+                        <p><span className="text-white font-medium">Bank:</span> Capitec</p>
+                        <p><span className="text-white font-medium">Account No:</span> 1654096839</p>
+                        <p><span className="text-white font-medium">Reference:</span> Honeymoon</p>
                       </div>
                     </div>
                     <div className="rounded-[1.5rem] bg-white/10 p-6 backdrop-blur border border-white/10 flex items-center justify-center min-h-32">
@@ -759,5 +767,6 @@ export default function WeddingWebsite() {
 
       </div>
     </main>
+    </>
   );
 }
