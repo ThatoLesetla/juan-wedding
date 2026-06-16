@@ -1,18 +1,71 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Calendar, MapPin, Music, Gift, Heart, Plane, Users, Mail,
-  Download, Moon, Sun, Volume2, VolumeX, X, MessageCircle, Sparkles,
+  Calendar, MapPin, Music, Gift, Heart, Mail,
+  Volume2, VolumeX, X, Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
+// ─── Constants ────────────────────────────────────────────────────────────────
 const weddingDate = new Date("2026-11-07T15:00:00");
-
 const cn = (...classes) => classes.filter(Boolean).join(" ");
 
+// ─── Data ─────────────────────────────────────────────────────────────────────
+const journeyPhotos = [
+  "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1505944357431-27579db47558?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=900&q=80",
+];
+
+const gallery = [
+  "https://images.unsplash.com/photo-1537633552985-df8429e8048b?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1606216794074-735e91aa2c92?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=900&q=80",
+];
+
+const accommodation = [
+  {
+    name: "Nantes Vue Guest House",
+    description: "A charming guesthouse nestled in the heart of Paarl's wine country, offering luxury rooms with vineyard views.",
+    distance: "2 min from venue",
+    mapUrl: "https://maps.google.com/?q=Nantes+Vue+Guest+House+Paarl",
+    img: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80",
+  },
+  {
+    name: "Under Oaks Guesthouse",
+    description: "Elegant accommodation under centuries-old oak trees, blending classic Cape Dutch architecture with modern comfort.",
+    distance: "5 min from venue",
+    mapUrl: "https://maps.google.com/?q=Under+Oaks+Guesthouse+Paarl",
+    img: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=600&q=80",
+  },
+  {
+    name: "Zonnevanger Venue & Guesthouse",
+    description: "A boutique guesthouse surrounded by beautiful gardens and the scenic Paarl Valley mountains.",
+    distance: "8 min from venue",
+    mapUrl: "https://maps.google.com/?q=Zonnevanger+Venue+and+Guesthouse+Paarl",
+    img: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=600&q=80",
+  },
+  {
+    name: "Cana Vineyard Guesthouse",
+    description: "Romantic vineyard guesthouse offering an intimate escape with award-winning wines and breathtaking mountain vistas.",
+    distance: "10 min from venue",
+    mapUrl: "https://maps.google.com/?q=Cana+Vineyard+Guesthouse+Paarl",
+    img: "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&w=600&q=80",
+  },
+];
+
+// ─── Hooks ────────────────────────────────────────────────────────────────────
 function useCountdown(targetDate) {
-  const [now, setNow] = useState(new Date());
+  const [now, setNow] = React.useState(new Date());
   React.useEffect(() => {
     const timer = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(timer);
@@ -26,53 +79,27 @@ function useCountdown(targetDate) {
   };
 }
 
-const story = [
-  { title: "The First Hello", date: "Spring 2021", copy: "Taylor and Juan met through close friends over a relaxed dinner that became an unforgettable evening." },
-  { title: "The First Date", date: "Summer 2021", copy: "A quiet garden café, endless conversation, and the kind of laughter that made time disappear." },
-  { title: "The Proposal", date: "December 2025", copy: "Juan proposed beneath warm sunset light, surrounded by flowers, music, and the people they love most." },
-];
-
-const events = [
-  { name: "Welcome Dinner", date: "Friday, 6 November 2026", time: "18:30", venue: "The Conservatory Garden House", dress: "Smart casual in soft neutrals", notes: "A relaxed evening of food, speeches, and meeting both families." },
-  { name: "Ceremony", date: "Saturday, 7 November 2026", time: "15:00", venue: "Rosewood Estate Chapel", dress: "Formal garden elegance", notes: "Please arrive 30 minutes early. Phones on silent during the ceremony." },
-  { name: "Reception", date: "Saturday, 7 November 2026", time: "17:30", venue: "Rosewood Estate Ballroom", dress: "Black tie optional", notes: "Dinner, dancing, cake, and golden-hour portraits." },
-  { name: "After Party", date: "Saturday, 7 November 2026", time: "22:30", venue: "The Champagne Lounge", dress: "Celebrate in style", notes: "Late-night snacks, music, and one last toast to love." },
-];
-
-const gallery = [
-  "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1505944357431-27579db47558?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=900&q=80",
-];
-
-const weddingParty = [
-  ["Amelia", "Maid of Honor", "Taylor's sister and lifelong best friend.", 1494790108377],
-  ["Sofia", "Bridesmaid", "Planner, hype woman, and queen of details.", 1500648767791],
-  ["Mateo", "Best Man", "Juan's brother and official toast master.", 1507003211169],
-  ["Andre", "Groomsman", "Friend since university and dance-floor starter.", 1544005313],
-];
-
-const initialMessages = [
-  { name: "Mia", message: "Wishing you a lifetime of laughter, friendship, and beautiful adventures." },
-  { name: "Carlos", message: "So excited to celebrate this incredible love story with you both." },
-  { name: "Nora", message: "May your marriage be filled with grace, joy, and endless dancing." },
-];
-
+// ─── Shared components ────────────────────────────────────────────────────────
 function Section({ id, eyebrow, title, children, className }) {
   return (
     <section id={id} className={cn("relative px-4 py-24 sm:px-6 lg:px-8", className)}>
       <div className="mx-auto max-w-7xl">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.25 }} transition={{ duration: 0.7 }}
-          className="mx-auto mb-14 max-w-3xl text-center"
-        >
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.4em] text-[#a0835f]">{eyebrow}</p>
-          <h2 className="font-serif text-4xl text-[#35291f] dark:text-[#fff8ef] sm:text-5xl">{title}</h2>
-        </motion.div>
+        {(eyebrow || title) && (
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.7 }}
+            className="mx-auto mb-14 max-w-3xl text-center"
+          >
+            {eyebrow && (
+              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.4em] text-[#D4AF37]">{eyebrow}</p>
+            )}
+            {title && (
+              <h2 className="font-serif text-4xl text-[#2D1B5E] sm:text-5xl">{title}</h2>
+            )}
+          </motion.div>
+        )}
         {children}
       </div>
     </section>
@@ -82,284 +109,654 @@ function Section({ id, eyebrow, title, children, className }) {
 function Countdown() {
   const time = useCountdown(weddingDate);
   return (
-    <div className="grid grid-cols-4 gap-3 rounded-[2rem] border border-white/40 bg-white/25 p-3 shadow-2xl backdrop-blur-xl">
+    <div className="grid grid-cols-4 gap-3 rounded-[2rem] border border-white/40 bg-white/20 p-3 shadow-2xl backdrop-blur-xl">
       {Object.entries(time).map(([label, value]) => (
-        <div key={label} className="rounded-3xl bg-white/60 px-3 py-4 text-center dark:bg-white/10">
-          <div className="font-serif text-3xl text-[#7d6548] dark:text-[#f4d8b4]">{value}</div>
-          <div className="text-[10px] uppercase tracking-[0.25em] text-[#635242] dark:text-[#f8ead8]">{label}</div>
+        <div key={label} className="rounded-3xl bg-white/60 px-3 py-4 text-center">
+          <div className="font-serif text-3xl text-[#2D1B5E]">{String(value).padStart(2, "0")}</div>
+          <div className="text-[10px] uppercase tracking-[0.25em] text-[#7B6A9C]">{label}</div>
         </div>
       ))}
     </div>
   );
 }
 
+function FloralDivider() {
+  return (
+    <div className="flex items-center justify-center gap-3 py-2">
+      <div className="h-px w-24 bg-gradient-to-r from-transparent to-[#D8C4F1]" />
+      <span className="text-[#D4AF37] text-xl">✦</span>
+      <span className="text-[#D8C4F1] text-2xl">❀</span>
+      <span className="text-[#D4AF37] text-xl">✦</span>
+      <div className="h-px w-24 bg-gradient-to-l from-transparent to-[#D8C4F1]" />
+    </div>
+  );
+}
+
+function GoldDivider() {
+  return <div className="mx-auto my-5 h-px w-20 bg-[#D4AF37]" />;
+}
+
+// ─── Main component ───────────────────────────────────────────────────────────
 export default function WeddingWebsite() {
-  const [dark, setDark] = useState(false);
   const [musicOn, setMusicOn] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [rsvpSent, setRsvpSent] = useState(false);
-  const [messages, setMessages] = useState(initialMessages);
-  const [guestMessage, setGuestMessage] = useState({ name: "", message: "" });
-  const stats = useMemo(() => ({ attending: 86, pending: 21, meals: 64, songs: 38 }), []);
-
-  const submitMessage = (e) => {
-    e.preventDefault();
-    if (!guestMessage.name || !guestMessage.message) return;
-    setMessages([{ ...guestMessage }, ...messages]);
-    setGuestMessage({ name: "", message: "" });
-  };
+  const [songSent, setSongSent] = useState(false);
+  const [song, setSong] = useState("");
+  const [rsvpForm, setRsvpForm] = useState({
+    name: "", email: "", attending: "", attendance: "Joyfully attending",
+    meal: "", dietary: "", songRequest: "",
+  });
 
   return (
-    <main className={cn(dark && "dark", "min-h-screen scroll-smooth")}>
-      <div className="min-h-screen overflow-hidden bg-[#fffaf2] text-[#3b3028] transition-colors duration-500 dark:bg-[#17110e] dark:text-[#fff8ef]">
-        <div className="pointer-events-none fixed inset-0 z-0 opacity-60">
-          <div className="absolute left-[-10%] top-20 h-72 w-72 rounded-full bg-[#f2cfd5] blur-3xl" />
-          <div className="absolute right-[-8%] top-96 h-96 w-96 rounded-full bg-[#c8d6bd] blur-3xl" />
-          <div className="absolute bottom-0 left-1/3 h-80 w-80 rounded-full bg-[#ead7b9] blur-3xl" />
+    <main className="min-h-screen scroll-smooth">
+      <div className="min-h-screen overflow-hidden bg-[#FAF7F2] text-[#2D1B5E]">
+
+        {/* ── Ambient blobs ── */}
+        <div className="pointer-events-none fixed inset-0 z-0 opacity-40">
+          <div className="absolute left-[-10%] top-20 h-80 w-80 rounded-full bg-[#D8C4F1] blur-3xl" />
+          <div className="absolute right-[-8%] top-96 h-96 w-96 rounded-full bg-[#D4AF37]/20 blur-3xl" />
+          <div className="absolute bottom-20 left-1/3 h-80 w-80 rounded-full bg-[#D8C4F1]/50 blur-3xl" />
         </div>
 
-        <nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/30 bg-white/55 px-4 py-3 backdrop-blur-2xl dark:bg-[#17110e]/60">
+        {/* ── NAV ── */}
+        <nav className="fixed left-0 right-0 top-0 z-50 border-b border-[#D8C4F1]/40 bg-white/70 px-4 py-3 backdrop-blur-2xl">
           <div className="mx-auto flex max-w-7xl items-center justify-between">
-            <a href="#home" className="font-serif text-2xl text-[#8b6f4e] dark:text-[#f3d6ad]">T & J</a>
-            <div className="hidden items-center gap-6 text-sm md:flex">
-              {["Story", "Events", "Travel", "RSVP", "Gallery", "Registry"].map((item) => (
-                <a key={item} href={`#${item.toLowerCase()}`} className="hover:text-[#a0835f]">{item}</a>
+            <a href="#home" className="font-serif text-2xl text-[#2D1B5E] tracking-wide">J & T</a>
+            <div className="hidden items-center gap-6 text-sm text-[#2D1B5E] md:flex">
+              {[
+                ["Journey", "journey"],
+                ["Events", "events"],
+                ["Dress Code", "dresscode"],
+                ["Accommodation", "accommodation"],
+                ["RSVP", "rsvp"],
+                ["Gallery", "gallery"],
+                ["Fund", "fund"],
+              ].map(([label, href]) => (
+                <a key={href} href={`#${href}`} className="hover:text-[#D4AF37] transition-colors">{label}</a>
               ))}
             </div>
             <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon" onClick={() => setMusicOn(!musicOn)}>
+              <Button variant="ghost" size="icon" onClick={() => setMusicOn(!musicOn)} className="text-[#2D1B5E]">
                 {musicOn ? <Volume2 size={18} /> : <VolumeX size={18} />}
               </Button>
-              <Button variant="ghost" size="icon" onClick={() => setDark(!dark)}>
-                {dark ? <Sun size={18} /> : <Moon size={18} />}
-              </Button>
-              <Button asChild className="rounded-full bg-[#9c7b55] text-white hover:bg-[#846744]">
+              <Button asChild className="rounded-full bg-[#D4AF37] px-6 text-white hover:bg-[#b8961e]">
                 <a href="#rsvp">RSVP</a>
               </Button>
             </div>
           </div>
         </nav>
 
-        <header id="home" className="relative z-10 flex min-h-screen items-center justify-center bg-[url('https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=1800&q=90')] bg-cover bg-center px-4 text-center">
-          <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/25 to-[#fffaf2] dark:to-[#17110e]" />
-          <motion.div initial={{ opacity: 0, y: 34 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }} className="relative mx-auto max-w-5xl pt-24 text-white">
-            <p className="mb-5 text-xs font-semibold uppercase tracking-[0.5em]">Together with their families</p>
-            <h1 className="font-serif text-7xl leading-none sm:text-8xl lg:text-9xl">Taylor & Juan</h1>
-            <p className="mx-auto mt-6 max-w-2xl text-lg text-white/90 sm:text-2xl">Invite you to celebrate their love story in an unforgettable garden wedding.</p>
-            <div className="mx-auto mt-10 max-w-2xl"><Countdown /></div>
-            <div className="mt-10 flex flex-wrap justify-center gap-4">
-              <Button asChild size="lg" className="rounded-full bg-white px-8 text-[#7d6548] hover:bg-[#fff4de]">
+        {/* ── HERO ── */}
+        <header
+          id="home"
+          className="relative z-10 flex min-h-screen items-center justify-center bg-[url('https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=1800&q=90')] bg-cover bg-center px-4 text-center"
+        >
+          <div className="absolute inset-0 bg-gradient-to-b from-[#2D1B5E]/55 via-[#2D1B5E]/30 to-[#FAF7F2]" />
+          <motion.div
+            initial={{ opacity: 0, y: 34 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.2 }}
+            className="relative mx-auto max-w-5xl pt-24"
+          >
+            <p className="mb-4 text-[#D8C4F1] text-2xl tracking-[0.4em]">❀ ✦ ❀</p>
+            <h1 className="font-serif text-7xl leading-none text-white sm:text-8xl lg:text-[9rem]">
+              Juan & Taylor
+            </h1>
+            <GoldDivider />
+            <p className="mx-auto max-w-2xl text-lg italic text-white/90 sm:text-xl leading-8">
+              Invite you to witness the sacred covenant of marriage<br className="hidden sm:block" />
+              and share in the joy of their union.
+            </p>
+
+            {/* Venue */}
+            <div className="mt-8 flex flex-col items-center gap-2">
+              <div className="flex items-center gap-2 text-[#D4AF37]">
+                <MapPin size={16} />
+                <span className="font-semibold tracking-widest uppercase text-sm">Nantes Estate</span>
+              </div>
+              <p className="text-white/75 text-sm">Paarl, South Africa</p>
+              <a
+                href="https://maps.app.goo.gl/yS1cqqnQfjnew8yd6?g_st=ic"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-1 inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/70 bg-[#D4AF37]/10 px-5 py-2 text-sm text-[#D4AF37] backdrop-blur hover:bg-[#D4AF37]/20 transition-colors"
+              >
+                <MapPin size={13} /> View Location
+              </a>
+            </div>
+
+            {/* Countdown */}
+            <div className="mx-auto mt-8 max-w-sm sm:max-w-md">
+              <Countdown />
+            </div>
+
+            {/* CTA buttons */}
+            <div className="mt-8 flex flex-wrap justify-center gap-4">
+              <Button asChild size="lg" className="rounded-full bg-[#D4AF37] px-8 text-white hover:bg-[#b8961e]">
                 <a href="#rsvp">Reserve Your Seat</a>
               </Button>
               <Button asChild size="lg" variant="outline" className="rounded-full border-white/70 bg-white/10 px-8 text-white backdrop-blur hover:bg-white/20">
                 <a href="#events">View Details</a>
               </Button>
             </div>
-            <div className="mt-10 flex items-center justify-center gap-6 text-sm text-white/90">
-              <span className="flex items-center gap-2"><Calendar size={16} /> 7 November 2026</span>
-              <span className="flex items-center gap-2"><MapPin size={16} /> Rosewood Estate</span>
+
+            <div className="mt-8 flex items-center justify-center gap-2 text-white/75 text-sm">
+              <Calendar size={15} className="text-[#D4AF37]" />
+              <span>7 November 2026</span>
             </div>
           </motion.div>
         </header>
 
-        <Section id="story" eyebrow="Our Story" title="A love written in golden light">
-          <div className="grid gap-6 md:grid-cols-3">
-            {story.map((item, index) => (
-              <motion.div key={item.title} initial={{ opacity: 0, y: 28 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.12 }}>
-                <Card className="h-full rounded-[2rem] border-white/60 bg-white/70 shadow-xl backdrop-blur dark:border-white/10 dark:bg-white/10">
-                  <CardContent className="p-8">
-                    <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-full bg-[#efe1cc] text-[#8b6f4e] dark:bg-white/10"><Heart size={20} /></div>
-                    <p className="text-xs uppercase tracking-[0.3em] text-[#a0835f]">{item.date}</p>
-                    <h3 className="mt-3 font-serif text-3xl">{item.title}</h3>
-                    <p className="mt-4 leading-7 text-[#6c5b4d] dark:text-[#eadcc9]">{item.copy}</p>
+        {/* ── OUR JOURNEY ── */}
+        <Section id="journey" eyebrow="Our Journey" title="A love written in the stars">
+          <div className="mx-auto mb-12 max-w-2xl text-center">
+            <FloralDivider />
+            <blockquote className="mt-6 font-serif text-2xl italic text-[#2D1B5E] sm:text-3xl leading-snug">
+              "I have found the one whom my soul loves." 🤍
+            </blockquote>
+            <p className="mt-3 text-sm uppercase tracking-[0.3em] text-[#D4AF37]">Song of Solomon 3:4</p>
+            <FloralDivider />
+          </div>
+          <div className="columns-2 gap-4 sm:columns-3">
+            {journeyPhotos.map((src, i) => (
+              <motion.div
+                key={src}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="mb-4 overflow-hidden rounded-[1.5rem] shadow-xl"
+              >
+                <img src={src} alt={`Our journey ${i + 1}`} className="h-auto w-full object-cover" />
+              </motion.div>
+            ))}
+          </div>
+        </Section>
+
+        {/* ── EVENTS ── */}
+        <Section id="events" eyebrow="Wedding Day" title="Celebrate every beautiful moment" className="bg-white/50">
+          <div className="grid gap-8 md:grid-cols-2">
+
+            {/* Ceremony */}
+            <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
+              <Card className="h-full rounded-[2rem] border-[#D8C4F1]/60 bg-white/80 shadow-xl backdrop-blur">
+                <CardContent className="p-8 sm:p-10">
+                  <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-[#D8C4F1]/40">
+                    <Heart size={24} className="text-[#D4AF37]" />
+                  </div>
+                  <p className="text-xs uppercase tracking-[0.4em] text-[#D4AF37]">Saturday, 7 November 2026</p>
+                  <h3 className="mt-2 font-serif text-4xl text-[#2D1B5E]">Ceremony</h3>
+                  <GoldDivider />
+                  <div className="space-y-3 text-sm leading-7 text-[#5B4D8E]">
+                    <p><span className="font-semibold text-[#2D1B5E]">Time:</span> 15:00</p>
+                    <p><span className="font-semibold text-[#2D1B5E]">Venue:</span> Nantes Estate, Paarl</p>
+                    <p><span className="font-semibold text-[#2D1B5E]">Dress Code:</span> Formal garden elegance — soft pastels & florals welcome</p>
+                    <p className="italic text-[#7B6A9C]">Please arrive 30 minutes early. Phones on silent during the ceremony.</p>
+                  </div>
+                  <a
+                    href="https://maps.app.goo.gl/yS1cqqnQfjnew8yd6?g_st=ic"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-6 flex w-full items-center justify-center gap-2 rounded-full border border-[#D4AF37] py-3 text-sm text-[#D4AF37] hover:bg-[#D4AF37]/10 transition-colors"
+                  >
+                    <MapPin size={14} /> Open in Google Maps
+                  </a>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            {/* Reception */}
+            <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
+              <Card className="h-full rounded-[2rem] border-[#D8C4F1]/60 bg-white/80 shadow-xl backdrop-blur">
+                <CardContent className="p-8 sm:p-10">
+                  <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-[#D4AF37]/15">
+                    <Sparkles size={24} className="text-[#D4AF37]" />
+                  </div>
+                  <p className="text-xs uppercase tracking-[0.4em] text-[#D4AF37]">Saturday, 7 November 2026</p>
+                  <h3 className="mt-2 font-serif text-4xl text-[#2D1B5E]">Reception</h3>
+                  <GoldDivider />
+                  <div className="space-y-3 text-sm leading-7 text-[#5B4D8E]">
+                    <p><span className="font-semibold text-[#2D1B5E]">Time:</span> 17:30</p>
+                    <p><span className="font-semibold text-[#2D1B5E]">Venue:</span> Nantes Estate, Paarl</p>
+                    <p><span className="font-semibold text-[#2D1B5E]">Dress Code:</span> Black tie optional — celebrate in style</p>
+                    <p className="italic text-[#7B6A9C]">Dinner, dancing, cake, and golden-hour portraits await.</p>
+                  </div>
+                  <a
+                    href="https://maps.app.goo.gl/yS1cqqnQfjnew8yd6?g_st=ic"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-6 flex w-full items-center justify-center gap-2 rounded-full border border-[#D4AF37] py-3 text-sm text-[#D4AF37] hover:bg-[#D4AF37]/10 transition-colors"
+                  >
+                    <MapPin size={14} /> Open in Google Maps
+                  </a>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </div>
+
+          {/* Map preview */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-10 overflow-hidden rounded-[2rem] border border-[#D8C4F1]/60 shadow-xl"
+          >
+            <div
+              className="flex h-72 items-center justify-center bg-cover bg-center text-center text-white"
+              style={{ backgroundImage: "url(https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1400&q=80)" }}
+            >
+              <div className="rounded-3xl bg-[#2D1B5E]/60 p-8 backdrop-blur">
+                <MapPin className="mx-auto mb-3 text-[#D4AF37]" size={28} />
+                <p className="font-serif text-2xl">Nantes Estate, Paarl</p>
+                <a
+                  href="https://maps.app.goo.gl/yS1cqqnQfjnew8yd6?g_st=ic"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 inline-flex items-center gap-2 rounded-full border border-[#D4AF37] bg-[#D4AF37]/10 px-5 py-2 text-sm text-[#D4AF37] hover:bg-[#D4AF37]/25 transition-colors"
+                >
+                  <MapPin size={13} /> Open Map
+                </a>
+              </div>
+            </div>
+          </motion.div>
+        </Section>
+
+        {/* ── DRESS CODE ── */}
+        <Section id="dresscode" eyebrow="Attire" title="Dress Code">
+          <div className="grid gap-8 md:grid-cols-2">
+
+            {/* Gentlemen */}
+            <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+              <Card className="h-full overflow-hidden rounded-[2rem] border-[#D8C4F1]/60 bg-white/80 shadow-xl backdrop-blur">
+                <div
+                  className="h-64 bg-cover bg-center"
+                  style={{ backgroundImage: "url(https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80)" }}
+                />
+                <CardContent className="p-8">
+                  <p className="text-xs uppercase tracking-[0.4em] text-[#D4AF37]">Formal Attire</p>
+                  <h3 className="mt-2 font-serif text-3xl text-[#2D1B5E]">Gentlemen</h3>
+                  <div className="my-4 h-px w-16 bg-[#D8C4F1]" />
+                  <ul className="space-y-3 text-sm text-[#5B4D8E]">
+                    <li className="flex items-center gap-3"><span className="text-[#D4AF37] text-base">✦</span> Suit</li>
+                    <li className="flex items-center gap-3"><span className="text-[#D4AF37] text-base">✦</span> Dress shoes</li>
+                    <li className="flex items-center gap-3"><span className="text-[#D4AF37] text-base">✦</span> No ties required</li>
+                  </ul>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            {/* Ladies */}
+            <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}>
+              <Card className="h-full overflow-hidden rounded-[2rem] border-[#D8C4F1]/60 bg-white/80 shadow-xl backdrop-blur">
+                <div
+                  className="h-64 bg-cover bg-center"
+                  style={{ backgroundImage: "url(https://images.unsplash.com/photo-1594552072238-b8a33785b6cd?auto=format&fit=crop&w=800&q=80)" }}
+                />
+                <CardContent className="p-8">
+                  <p className="text-xs uppercase tracking-[0.4em] text-[#D4AF37]">Elegant Dresses</p>
+                  <h3 className="mt-2 font-serif text-3xl text-[#2D1B5E]">Ladies</h3>
+                  <div className="my-4 h-px w-16 bg-[#D8C4F1]" />
+                  <ul className="space-y-3 text-sm text-[#5B4D8E]">
+                    <li className="flex items-center gap-3"><span className="text-[#D4AF37] text-base">✦</span> Soft pastel colours</li>
+                    <li className="flex items-center gap-3"><span className="text-[#D4AF37] text-base">✦</span> Heels encouraged</li>
+                    <li className="flex items-center gap-3"><span className="text-[#D4AF37] text-base">✦</span> Wedding-appropriate formal wear</li>
+                  </ul>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </div>
+        </Section>
+
+        {/* ── ACCOMMODATION ── */}
+        <Section id="accommodation" eyebrow="Where to Stay" title="Accommodation Nearby" className="bg-white/50">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {accommodation.map((place, i) => (
+              <motion.div
+                key={place.name}
+                initial={{ opacity: 0, y: 28 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+              >
+                <Card className="h-full overflow-hidden rounded-[2rem] border-[#D8C4F1]/60 bg-white/80 shadow-xl backdrop-blur">
+                  <div className="h-44 bg-cover bg-center" style={{ backgroundImage: `url(${place.img})` }} />
+                  <CardContent className="p-6">
+                    <h3 className="font-serif text-lg text-[#2D1B5E] leading-snug">{place.name}</h3>
+                    <p className="mt-1 text-xs text-[#D4AF37] uppercase tracking-wide">{place.distance}</p>
+                    <p className="mt-3 text-sm leading-6 text-[#5B4D8E]">{place.description}</p>
+                    <a
+                      href={place.mapUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-4 flex w-full items-center justify-center gap-2 rounded-full border border-[#D4AF37] py-2.5 text-xs text-[#D4AF37] hover:bg-[#D4AF37]/10 transition-colors"
+                    >
+                      <MapPin size={12} /> View on Map
+                    </a>
                   </CardContent>
                 </Card>
               </motion.div>
             ))}
           </div>
-        </Section>
 
-        <Section id="events" eyebrow="Wedding Weekend" title="Celebrate every beautiful moment" className="bg-[#f7efe3]/70 dark:bg-white/5">
-          <div className="grid gap-6 lg:grid-cols-4">
-            {events.map((event) => (
-              <Card key={event.name} className="rounded-[2rem] border-white/60 bg-white/75 shadow-xl backdrop-blur dark:border-white/10 dark:bg-white/10">
-                <CardContent className="p-7">
-                  <Sparkles className="mb-5 text-[#a0835f]" size={24} />
-                  <h3 className="font-serif text-3xl">{event.name}</h3>
-                  <div className="mt-5 space-y-3 text-sm leading-6 text-[#6c5b4d] dark:text-[#eadcc9]">
-                    <p><strong>Date:</strong> {event.date}</p>
-                    <p><strong>Time:</strong> {event.time}</p>
-                    <p><strong>Venue:</strong> {event.venue}</p>
-                    <p><strong>Dress:</strong> {event.dress}</p>
-                    <p>{event.notes}</p>
-                  </div>
-                  <Button variant="outline" className="mt-6 w-full rounded-full">Open Map</Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </Section>
-
-        <Section id="travel" eyebrow="Travel & Stay" title="Everything guests need to arrive with ease">
-          <div className="grid gap-6 lg:grid-cols-3">
-            {[
-              [Plane, "Arrivals", "Nearest airport: Cape Town International Airport. Shuttle options will be shared closer to the day."],
-              [MapPin, "Accommodation", "Recommended hotels include The Garden House, Rosewood Suites, and Ivory Manor."],
-              [Calendar, "Guest Tips", "Book early, bring comfortable shoes for garden photos, and leave room for dancing."],
-            ].map(([Icon, title, copy]) => (
-              <Card key={title} className="rounded-[2rem] border-white/60 bg-white/70 shadow-xl backdrop-blur dark:border-white/10 dark:bg-white/10">
-                <CardContent className="p-8">
-                  <Icon className="mb-5 text-[#a0835f]" />
-                  <h3 className="font-serif text-3xl">{title}</h3>
-                  <p className="mt-4 leading-7 text-[#6c5b4d] dark:text-[#eadcc9]">{copy}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-          <div className="mt-8 overflow-hidden rounded-[2rem] border border-white/60 bg-[#d8c7ad] p-4 shadow-xl dark:border-white/10 dark:bg-white/10">
-            <div className="flex h-72 items-center justify-center rounded-[1.5rem] bg-[url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1400&q=80')] bg-cover bg-center text-center text-white">
-              <div className="rounded-3xl bg-black/30 p-8 backdrop-blur">
-                <MapPin className="mx-auto mb-3" />
-                <p className="font-serif text-3xl">Interactive Map Placeholder</p>
+          {/* Accommodation map placeholder */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-10 overflow-hidden rounded-[2rem] border border-[#D8C4F1]/60 shadow-xl"
+          >
+            <div
+              className="flex h-64 items-center justify-center bg-cover bg-center text-center text-white"
+              style={{ backgroundImage: "url(https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1400&q=80)" }}
+            >
+              <div className="rounded-3xl bg-[#2D1B5E]/60 p-8 backdrop-blur">
+                <MapPin className="mx-auto mb-3 text-[#D4AF37]" size={28} />
+                <p className="font-serif text-xl">Paarl, Western Cape</p>
+                <a
+                  href="https://maps.google.com/?q=guesthouses+near+Paarl+South+Africa"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 inline-flex items-center gap-2 rounded-full border border-[#D4AF37] bg-[#D4AF37]/10 px-5 py-2 text-sm text-[#D4AF37] hover:bg-[#D4AF37]/25 transition-colors"
+                >
+                  Explore Area
+                </a>
               </div>
             </div>
-          </div>
+          </motion.div>
         </Section>
 
-        <Section id="rsvp" eyebrow="RSVP" title="We saved you a seat" className="bg-[#f7efe3]/70 dark:bg-white/5">
-          <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
-            <Card className="rounded-[2rem] border-white/60 bg-white/80 shadow-2xl backdrop-blur dark:border-white/10 dark:bg-white/10">
-              <CardContent className="p-8">
-                <form className="grid gap-4" onSubmit={(e) => { e.preventDefault(); setRsvpSent(true); }}>
-                  <input className="rounded-2xl border bg-white/70 p-4 outline-none dark:bg-white/10" placeholder="Guest name" required />
-                  <input className="rounded-2xl border bg-white/70 p-4 outline-none dark:bg-white/10" type="email" placeholder="Email address" required />
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <input className="rounded-2xl border bg-white/70 p-4 outline-none dark:bg-white/10" type="number" min="1" placeholder="Number attending" />
-                    <select className="rounded-2xl border bg-white/70 p-4 outline-none dark:bg-white/10">
-                      <option>Joyfully attending</option>
-                      <option>Sadly cannot attend</option>
-                    </select>
-                  </div>
-                  <select className="rounded-2xl border bg-white/70 p-4 outline-none dark:bg-white/10">
-                    <option>Meal preference</option><option>Chicken</option><option>Beef</option><option>Vegetarian</option><option>Vegan</option>
-                  </select>
-                  <input className="rounded-2xl border bg-white/70 p-4 outline-none dark:bg-white/10" placeholder="Song request" />
-                  <textarea className="min-h-28 rounded-2xl border bg-white/70 p-4 outline-none dark:bg-white/10" placeholder="Dietary restrictions or notes" />
-                  <Button className="rounded-full bg-[#9c7b55] py-6 text-white hover:bg-[#846744]">Send RSVP</Button>
-                </form>
-                <AnimatePresence>
-                  {rsvpSent && <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="mt-5 rounded-2xl bg-[#e8f0df] p-4 text-[#52663f]">Thank you. Your RSVP has been received with love.</motion.div>}
-                </AnimatePresence>
-              </CardContent>
-            </Card>
-            <Card className="rounded-[2rem] border-white/60 bg-white/80 shadow-2xl backdrop-blur dark:border-white/10 dark:bg-white/10">
-              <CardContent className="p-8">
-                <h3 className="font-serif text-3xl">Admin Preview</h3>
-                <div className="mt-6 grid grid-cols-2 gap-4">
-                  {Object.entries(stats).map(([label, value]) => (
-                    <div key={label} className="rounded-3xl bg-[#fff5e8] p-5 dark:bg-white/10">
-                      <p className="font-serif text-3xl text-[#8b6f4e] dark:text-[#f3d6ad]">{value}</p>
-                      <p className="text-xs uppercase tracking-[0.25em]">{label}</p>
-                    </div>
-                  ))}
+        {/* ── FOOD OPTIONS ── */}
+        <Section id="food" eyebrow="Dining" title="Food Options">
+          <Card className="mx-auto max-w-3xl rounded-[2rem] border-[#D8C4F1]/60 bg-white/80 shadow-2xl backdrop-blur">
+            <CardContent className="p-8 sm:p-12">
+              <div className="mb-8 text-center">
+                <FloralDivider />
+                <p className="mt-4 text-sm leading-7 text-[#5B4D8E]">
+                  We want to ensure every guest is well taken care of. Please indicate your meal preference and dietary requirements when you RSVP.
+                </p>
+              </div>
+              <div className="grid gap-6 sm:grid-cols-2">
+                <div className="rounded-[1.5rem] bg-[#FAF7F2] p-6 border border-[#D8C4F1]/40">
+                  <h3 className="font-serif text-2xl text-[#2D1B5E]">Menu</h3>
+                  <GoldDivider />
+                  <ul className="space-y-3 text-sm text-[#5B4D8E]">
+                    <li className="flex items-center gap-3"><span className="text-[#D4AF37]">✦</span> Chicken</li>
+                    <li className="flex items-center gap-3"><span className="text-[#D4AF37]">✦</span> Beef</li>
+                    <li className="flex items-center gap-3"><span className="text-[#D4AF37]">✦</span> Vegetarian</li>
+                    <li className="flex items-center gap-3"><span className="text-[#D4AF37]">✦</span> Vegan</li>
+                  </ul>
                 </div>
-                <Button variant="outline" className="mt-6 w-full rounded-full"><Download size={16} className="mr-2" /> Export CSV</Button>
-              </CardContent>
-            </Card>
-          </div>
+                <div className="rounded-[1.5rem] bg-[#FAF7F2] p-6 border border-[#D8C4F1]/40">
+                  <h3 className="font-serif text-2xl text-[#2D1B5E]">Dietary Needs</h3>
+                  <GoldDivider />
+                  <p className="text-sm leading-7 text-[#5B4D8E]">
+                    Please note any allergies or restrictions in your RSVP. We will do our best to accommodate everyone.
+                  </p>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {["Gluten-free", "Dairy-free", "Nut allergy", "Halal", "Kosher"].map((tag) => (
+                      <span key={tag} className="rounded-full border border-[#D8C4F1] px-3 py-1 text-xs text-[#7B6A9C]">{tag}</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <p className="mt-6 text-center text-xs italic text-[#7B6A9C]">Indicate your preferences in the RSVP form below</p>
+            </CardContent>
+          </Card>
         </Section>
 
-        <Section id="gallery" eyebrow="Gallery" title="A glimpse of forever">
+        {/* ── RSVP ── */}
+        <Section id="rsvp" eyebrow="RSVP" title="We saved you a seat" className="bg-white/50">
+          <Card className="mx-auto max-w-2xl rounded-[2rem] border-[#D8C4F1]/60 bg-white/85 shadow-2xl backdrop-blur">
+            <CardContent className="p-8 sm:p-12">
+              <AnimatePresence mode="wait">
+                {rsvpSent ? (
+                  <motion.div
+                    key="success"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="py-12 text-center"
+                  >
+                    <p className="text-5xl">💌</p>
+                    <h3 className="mt-4 font-serif text-3xl text-[#2D1B5E]">Thank you!</h3>
+                    <p className="mt-3 leading-7 text-[#5B4D8E]">
+                      Your RSVP has been received with love. We can't wait to celebrate with you.
+                    </p>
+                  </motion.div>
+                ) : (
+                  <motion.form
+                    key="form"
+                    className="grid gap-4"
+                    onSubmit={(e) => { e.preventDefault(); setRsvpSent(true); }}
+                  >
+                    <input
+                      className="rounded-2xl border border-[#D8C4F1] bg-white/70 p-4 outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-colors"
+                      placeholder="Guest name"
+                      required
+                      value={rsvpForm.name}
+                      onChange={(e) => setRsvpForm({ ...rsvpForm, name: e.target.value })}
+                    />
+                    <input
+                      className="rounded-2xl border border-[#D8C4F1] bg-white/70 p-4 outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-colors"
+                      type="email"
+                      placeholder="Email address"
+                      required
+                      value={rsvpForm.email}
+                      onChange={(e) => setRsvpForm({ ...rsvpForm, email: e.target.value })}
+                    />
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <input
+                        className="rounded-2xl border border-[#D8C4F1] bg-white/70 p-4 outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-colors"
+                        type="number"
+                        min="1"
+                        placeholder="Number attending"
+                        value={rsvpForm.attending}
+                        onChange={(e) => setRsvpForm({ ...rsvpForm, attending: e.target.value })}
+                      />
+                      <select
+                        className="rounded-2xl border border-[#D8C4F1] bg-white/70 p-4 outline-none focus:border-[#D4AF37] transition-colors"
+                        value={rsvpForm.attendance}
+                        onChange={(e) => setRsvpForm({ ...rsvpForm, attendance: e.target.value })}
+                      >
+                        <option>Joyfully attending</option>
+                        <option>Sadly cannot attend</option>
+                      </select>
+                    </div>
+                    <select
+                      className="rounded-2xl border border-[#D8C4F1] bg-white/70 p-4 outline-none focus:border-[#D4AF37] transition-colors"
+                      value={rsvpForm.meal}
+                      onChange={(e) => setRsvpForm({ ...rsvpForm, meal: e.target.value })}
+                    >
+                      <option value="">Meal preference</option>
+                      <option>Chicken</option>
+                      <option>Beef</option>
+                      <option>Vegetarian</option>
+                      <option>Vegan</option>
+                    </select>
+                    <textarea
+                      className="min-h-24 resize-none rounded-2xl border border-[#D8C4F1] bg-white/70 p-4 outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-colors"
+                      placeholder="Dietary restrictions or allergies"
+                      value={rsvpForm.dietary}
+                      onChange={(e) => setRsvpForm({ ...rsvpForm, dietary: e.target.value })}
+                    />
+                    <input
+                      className="rounded-2xl border border-[#D8C4F1] bg-white/70 p-4 outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-colors"
+                      placeholder="🎵 Song request for the dance floor"
+                      value={rsvpForm.songRequest}
+                      onChange={(e) => setRsvpForm({ ...rsvpForm, songRequest: e.target.value })}
+                    />
+                    <Button className="rounded-full bg-[#D4AF37] py-6 text-white hover:bg-[#b8961e] text-base">
+                      Send RSVP ✦
+                    </Button>
+                  </motion.form>
+                )}
+              </AnimatePresence>
+            </CardContent>
+          </Card>
+        </Section>
+
+        {/* ── GALLERY ── */}
+        <Section id="gallery" eyebrow="Gallery" title="Our Love Story in Pictures">
+          <div className="mx-auto mb-12 max-w-2xl text-center">
+            <FloralDivider />
+            <blockquote className="mt-6 font-serif text-2xl italic text-[#2D1B5E] sm:text-3xl leading-snug">
+              "I have found the one whom my soul loves." 🤍
+            </blockquote>
+            <p className="mt-3 text-sm uppercase tracking-[0.3em] text-[#D4AF37]">Song of Solomon 3:4</p>
+            <FloralDivider />
+          </div>
           <div className="columns-1 gap-5 sm:columns-2 lg:columns-3">
             {gallery.map((src, index) => (
-              <motion.button key={src} onClick={() => setSelectedImage(src)} className="mb-5 block overflow-hidden rounded-[2rem] shadow-xl" whileHover={{ scale: 1.02 }}>
-                <img src={src} alt={`Wedding gallery ${index + 1}`} className="h-auto w-full object-cover" />
+              <motion.button
+                key={src}
+                onClick={() => setSelectedImage(src)}
+                className="mb-5 block w-full overflow-hidden rounded-[2rem] shadow-xl"
+                whileHover={{ scale: 1.02 }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.07 }}
+              >
+                <img src={src} alt={`Gallery ${index + 1}`} className="h-auto w-full object-cover" />
               </motion.button>
             ))}
           </div>
         </Section>
 
-        <Section id="playlist" eyebrow="Playlist" title="Songs that define our love story" className="bg-[#f7efe3]/70 dark:bg-white/5">
-          <Card className="mx-auto max-w-3xl rounded-[2rem] border-white/60 bg-white/75 shadow-xl backdrop-blur dark:border-white/10 dark:bg-white/10">
-            <CardContent className="p-8 text-center">
-              <Music className="mx-auto mb-5 text-[#a0835f]" size={34} />
-              <h3 className="font-serif text-3xl">Spotify Playlist</h3>
-              <p className="mx-auto mt-4 max-w-xl leading-7 text-[#6c5b4d] dark:text-[#eadcc9]">Replace the embed below with your own Spotify playlist URL.</p>
-              <div className="mt-8 rounded-3xl bg-[#191414] p-6 text-left text-white">
-                <p className="text-sm uppercase tracking-[0.3em] text-white/60">Now playing</p>
-                <p className="mt-2 font-serif text-3xl">Golden Hour Forever</p>
-                <div className="mt-5 h-2 rounded-full bg-white/20"><div className="h-2 w-2/3 rounded-full bg-white" /></div>
-              </div>
+        {/* ── HONEYMOON FUND ── */}
+        <Section id="fund" eyebrow="Gift" title="" className="bg-white/50">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mx-auto max-w-4xl"
+          >
+            <Card className="overflow-hidden rounded-[2rem] border-[#D4AF37]/40 bg-gradient-to-br from-[#2D1B5E] via-[#3D2878] to-[#4A3470] shadow-2xl">
+              <CardContent className="p-10 sm:p-14">
+                <div className="grid gap-10 md:grid-cols-2 md:items-center">
+                  <div className="text-white">
+                    <p className="text-4xl mb-4">✈️ 🤍</p>
+                    <h3 className="font-serif text-4xl sm:text-5xl leading-tight">Honeymoon<br />Fund</h3>
+                    <div className="my-5 h-px w-20 bg-[#D4AF37]" />
+                    <p className="leading-7 text-white/80 italic text-sm sm:text-base">
+                      Should you feel led to bless us with a gift, we would be grateful for a contribution towards our dream honeymoon as we begin this new chapter together.
+                    </p>
+                  </div>
+                  <div className="space-y-4">
+                    <div className="rounded-[1.5rem] bg-white/10 p-6 backdrop-blur border border-white/10">
+                      <p className="text-xs uppercase tracking-[0.3em] text-[#D4AF37] mb-3">EFT Details</p>
+                      <div className="space-y-2 text-sm text-white/80">
+                        <p><span className="text-white font-medium">Account Name:</span> Juan & Taylor</p>
+                        <p><span className="text-white font-medium">Bank:</span> [Bank name]</p>
+                        <p><span className="text-white font-medium">Account No:</span> [Account number]</p>
+                        <p><span className="text-white font-medium">Reference:</span> Honeymoon Fund</p>
+                      </div>
+                    </div>
+                    <div className="rounded-[1.5rem] bg-white/10 p-6 backdrop-blur border border-white/10 flex items-center justify-center min-h-32">
+                      <div className="text-center">
+                        <p className="text-xs uppercase tracking-[0.3em] text-[#D4AF37] mb-3">QR Code</p>
+                        <div className="mx-auto h-20 w-20 rounded-xl bg-white/20 flex items-center justify-center">
+                          <Gift size={30} className="text-[#D4AF37]" />
+                        </div>
+                        <p className="mt-2 text-xs text-white/50">Placeholder</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </Section>
+
+        {/* ── SONG REQUESTS ── */}
+        <Section id="songs" eyebrow="Playlist" title="Song Requests">
+          <Card className="mx-auto max-w-2xl rounded-[2rem] border-[#D8C4F1]/60 bg-white/80 shadow-xl backdrop-blur">
+            <CardContent className="p-8 sm:p-12 text-center">
+              <Music className="mx-auto mb-5 text-[#D4AF37]" size={34} />
+              <p className="mx-auto max-w-md leading-7 text-[#5B4D8E]">
+                Help us build the perfect playlist! Suggest a song you'd love to hear on the dance floor.
+              </p>
+              <AnimatePresence mode="wait">
+                {songSent ? (
+                  <motion.div
+                    key="sent"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="mt-6 rounded-2xl bg-[#D8C4F1]/30 p-4 text-[#2D1B5E]"
+                  >
+                    Thank you for your song suggestion! 🎵
+                  </motion.div>
+                ) : (
+                  <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-6 flex gap-3">
+                    <input
+                      className="flex-1 rounded-2xl border border-[#D8C4F1] bg-white/70 p-4 outline-none focus:border-[#D4AF37] transition-colors"
+                      placeholder="Artist – Song title"
+                      value={song}
+                      onChange={(e) => setSong(e.target.value)}
+                    />
+                    <Button
+                      className="rounded-full bg-[#D4AF37] px-6 text-white hover:bg-[#b8961e]"
+                      onClick={() => { if (song.trim()) setSongSent(true); }}
+                    >
+                      Add
+                    </Button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </CardContent>
           </Card>
         </Section>
 
-        <Section id="registry" eyebrow="Registry" title="Your presence is the greatest gift">
-          <div className="grid gap-6 md:grid-cols-3">
-            {[[Gift, "Gift Registry"], [Plane, "Honeymoon Fund"], [Heart, "Cash Fund"]].map(([Icon, title]) => (
-              <Card key={title} className="rounded-[2rem] border-white/60 bg-white/70 text-center shadow-xl backdrop-blur dark:border-white/10 dark:bg-white/10">
-                <CardContent className="p-8">
-                  <Icon className="mx-auto mb-5 text-[#a0835f]" size={32} />
-                  <h3 className="font-serif text-3xl">{title}</h3>
-                  <p className="mt-4 leading-7 text-[#6c5b4d] dark:text-[#eadcc9]">Add your preferred external link or payment details here.</p>
-                  <Button variant="outline" className="mt-6 rounded-full">View Option</Button>
-                </CardContent>
-              </Card>
-            ))}
+        {/* ── FOOTER ── */}
+        <footer className="relative z-10 bg-[#2D1B5E] px-4 py-16 text-center text-white">
+          <p className="text-[#D8C4F1] text-2xl tracking-[0.4em] mb-4">❀ ✦ ❀</p>
+          <p className="font-serif text-5xl text-white">Juan & Taylor</p>
+          <p className="mt-3 text-[#D4AF37] text-sm uppercase tracking-[0.3em]">7 November 2026</p>
+          <div className="mt-3 flex items-center justify-center gap-2 text-[#D8C4F1]/80 text-sm">
+            <MapPin size={14} className="text-[#D4AF37]" />
+            <span>Nantes Estate, Paarl, South Africa</span>
           </div>
-        </Section>
-
-        <Section id="messages" eyebrow="Guestbook" title="Leave a message for the couple" className="bg-[#f7efe3]/70 dark:bg-white/5">
-          <form onSubmit={submitMessage} className="mx-auto mb-10 grid max-w-3xl gap-4 rounded-[2rem] bg-white/75 p-6 shadow-xl backdrop-blur dark:bg-white/10">
-            <input value={guestMessage.name} onChange={(e) => setGuestMessage({ ...guestMessage, name: e.target.value })} className="rounded-2xl border bg-white/70 p-4 outline-none dark:bg-white/10" placeholder="Your name" />
-            <textarea value={guestMessage.message} onChange={(e) => setGuestMessage({ ...guestMessage, message: e.target.value })} className="min-h-24 rounded-2xl border bg-white/70 p-4 outline-none dark:bg-white/10" placeholder="Write a heartfelt note" />
-            <Button className="rounded-full bg-[#9c7b55] text-white hover:bg-[#846744]"><MessageCircle size={16} className="mr-2" /> Add Message</Button>
-          </form>
-          <div className="grid gap-5 md:grid-cols-3">
-            {messages.map((msg, index) => (
-              <motion.div key={`${msg.name}-${index}`} initial={{ rotate: index % 2 ? 2 : -2, opacity: 0 }} whileInView={{ rotate: index % 2 ? 1 : -1, opacity: 1 }} viewport={{ once: true }} className="rounded-[1.5rem] bg-white p-6 shadow-xl dark:bg-white/10">
-                <p className="font-serif text-2xl">{msg.name}</p>
-                <p className="mt-4 leading-7 text-[#6c5b4d] dark:text-[#eadcc9]">{msg.message}</p>
-              </motion.div>
-            ))}
+          <div className="mt-5">
+            <a
+              href="mailto:hello@juanandtaylor.co.za"
+              className="inline-flex items-center gap-2 text-sm text-[#D8C4F1]/70 hover:text-white transition-colors"
+            >
+              <Mail size={14} /> Contact Us
+            </a>
           </div>
-        </Section>
-
-        <Section id="party" eyebrow="Wedding Party" title="The people standing beside us">
-          <div className="grid gap-6 md:grid-cols-4">
-            {weddingParty.map(([name, role, bio, imgId], index) => (
-              <Card key={name} className="overflow-hidden rounded-[2rem] border-white/60 bg-white/70 shadow-xl backdrop-blur dark:border-white/10 dark:bg-white/10">
-                <div className="h-56 bg-cover bg-center" style={{ backgroundImage: `url(https://images.unsplash.com/photo-${imgId}?auto=format&fit=crop&w=600&q=80)` }} />
-                <CardContent className="p-6 text-center">
-                  <Users className="mx-auto mb-3 text-[#a0835f]" />
-                  <h3 className="font-serif text-2xl">{name}</h3>
-                  <p className="text-sm uppercase tracking-[0.2em] text-[#a0835f]">{role}</p>
-                  <p className="mt-3 text-sm leading-6 text-[#6c5b4d] dark:text-[#eadcc9]">{bio}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </Section>
-
-        <footer className="relative z-10 bg-[#2f241d] px-4 py-16 text-center text-[#fff8ef]">
-          <p className="font-serif text-5xl">Taylor & Juan</p>
-          <p className="mt-4 text-[#e6d2b9]">#TaylorAndJuanForever</p>
-          <div className="mt-6 flex justify-center gap-4 text-sm">
-            <a href="#" className="hover:text-white">Instagram</a>
-            <a href="#" className="hover:text-white">TikTok</a>
-            <a href="mailto:hello@taylorandjuan.com" className="inline-flex items-center gap-2 hover:text-white"><Mail size={14} /> Contact</a>
-          </div>
-          <p className="mx-auto mt-8 max-w-2xl font-serif text-2xl text-[#e6d2b9]">"To love and be loved is to feel the sun from both sides."</p>
+          <div className="mx-auto mt-8 h-px w-32 bg-[#D4AF37]/40" />
+          <blockquote className="mx-auto mt-6 max-w-lg font-serif text-xl italic text-[#D8C4F1]">
+            "I have found the one whom my soul loves."
+          </blockquote>
+          <p className="mt-2 text-xs uppercase tracking-[0.3em] text-[#D4AF37]">Song of Solomon 3:4</p>
         </footer>
 
+        {/* ── Lightbox ── */}
         <AnimatePresence>
           {selectedImage && (
-            <motion.div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedImage(null)}>
-              <button className="absolute right-6 top-6 rounded-full bg-white p-3 text-black"><X size={20} /></button>
-              <motion.img src={selectedImage} alt="Selected" className="max-h-[85vh] rounded-[2rem] object-contain shadow-2xl" initial={{ scale: 0.92 }} animate={{ scale: 1 }} exit={{ scale: 0.92 }} />
+            <motion.div
+              className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedImage(null)}
+            >
+              <button className="absolute right-6 top-6 rounded-full bg-white p-3 text-black shadow-xl">
+                <X size={20} />
+              </button>
+              <motion.img
+                src={selectedImage}
+                alt="Selected"
+                className="max-h-[85vh] rounded-[2rem] object-contain shadow-2xl"
+                initial={{ scale: 0.92 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0.92 }}
+                onClick={(e) => e.stopPropagation()}
+              />
             </motion.div>
           )}
         </AnimatePresence>
+
       </div>
     </main>
   );
