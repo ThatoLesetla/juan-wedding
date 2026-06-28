@@ -60,20 +60,13 @@ export default function EnvelopeIntro({ onComplete }) {
         <motion.div
           key="envelope-intro"
           className="fixed inset-0 z-[200] flex select-none flex-col items-center justify-center"
-          style={{ background: "linear-gradient(145deg, #faf7f2 0%, #ede0f8 42%, #faf7f2 100%)" }}
+          style={{ background: "linear-gradient(145deg, #FBF8FC 0%, #EFE5F4 48%, #FBF8FC 100%)" }}
           exit={{ opacity: 0, transition: { duration: 0.85, ease: "easeInOut" } }}
         >
-          {/* ── Ambient blobs ── */}
-          <div className="pointer-events-none absolute inset-0 overflow-hidden">
-            <div className="absolute -left-28 top-0 h-[30rem] w-[30rem] rounded-full bg-[#D8C4F1]/55 blur-[110px]" />
-            <div className="absolute -right-28 bottom-0 h-[34rem] w-[34rem] rounded-full bg-[#D4AF37]/10 blur-[110px]" />
-            <div className="absolute left-1/3 top-1/4 h-80 w-80 rounded-full bg-[#D8C4F1]/22 blur-[70px]" />
-          </div>
-
           {/* ── Skip button ── */}
           <button
             onClick={doExit}
-            className="absolute right-5 top-5 z-10 rounded-full border border-[#D8C4F1] bg-white/50 px-4 py-1.5 text-[10px] uppercase tracking-[0.45em] text-[#7B6A9C] backdrop-blur-sm transition-all hover:border-[#D4AF37] hover:text-[#2D1B5E] focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
+            className="absolute right-5 top-5 z-10 rounded-full border border-[#DCCAEA] bg-white/60 px-4 py-1.5 text-[10px] uppercase tracking-[0.45em] text-[#76647F] backdrop-blur-sm transition-all hover:border-[#A989B6] hover:text-[#4C3A5F] focus:outline-none focus:ring-2 focus:ring-[#A989B6]"
             aria-label="Skip intro"
           >
             Skip
@@ -82,7 +75,7 @@ export default function EnvelopeIntro({ onComplete }) {
           <div className="flex flex-col items-center px-4">
             {/* ── Eyebrow ── */}
             <motion.p
-              className="mb-7 text-center text-[10px] uppercase tracking-[0.7em] text-[#9B8BBE]"
+              className="mb-7 text-center text-[10px] uppercase tracking-[0.7em] text-[#8F6FA0]"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.65 }}
@@ -125,12 +118,12 @@ export default function EnvelopeIntro({ onComplete }) {
                 <div
                   className="absolute inset-0"
                   style={{
-                    background: "linear-gradient(155deg, #3D2878 0%, #2D1B5E 100%)",
+                    background: "linear-gradient(155deg, #8F6FA0 0%, #6F587C 100%)",
                     borderRadius: 6,
                     boxShadow: [
-                      "0 44px 90px rgba(45,27,94,0.62)",
-                      "0 10px 30px rgba(45,27,94,0.38)",
-                      "inset 0 0 0 1.5px rgba(212,175,55,0.28)",
+                      "0 36px 80px rgba(76,58,95,0.34)",
+                      "0 10px 30px rgba(76,58,95,0.24)",
+                      "inset 0 0 0 1.5px rgba(255,255,255,0.18)",
                     ].join(", "),
                   }}
                 />
@@ -140,7 +133,7 @@ export default function EnvelopeIntro({ onComplete }) {
                   className="absolute inset-x-0 bottom-0"
                   style={{
                     height: "55%",
-                    background: "linear-gradient(180deg, #1b0d39 0%, #100829 100%)",
+                    background: "linear-gradient(180deg, #6F587C 0%, #4C3A5F 100%)",
                     clipPath: "polygon(0 100%, 50% 0%, 100% 100%)",
                     zIndex: 2,
                   }}
@@ -151,10 +144,10 @@ export default function EnvelopeIntro({ onComplete }) {
                   className="absolute inset-y-0 left-0"
                   style={{
                     width: "51%",
-                    background: "#33236a",
+                    background: "#7F6590",
                     clipPath: "polygon(0 0, 100% 50%, 0 100%)",
                     zIndex: 3,
-                    filter: "brightness(0.78)",
+                    filter: "brightness(0.9)",
                   }}
                 />
 
@@ -163,10 +156,10 @@ export default function EnvelopeIntro({ onComplete }) {
                   className="absolute inset-y-0 right-0"
                   style={{
                     width: "51%",
-                    background: "#33236a",
+                    background: "#7F6590",
                     clipPath: "polygon(100% 0, 0 50%, 100% 100%)",
                     zIndex: 3,
-                    filter: "brightness(0.78)",
+                    filter: "brightness(0.9)",
                   }}
                 />
 
@@ -180,36 +173,43 @@ export default function EnvelopeIntro({ onComplete }) {
                     width: "82%",
                     zIndex: 6,
                   }}
-                  animate={{ y: cardRisen ? -220 : 0 }}
-                  transition={{ duration: 0.78, ease: [0.22, 1, 0.36, 1] }}
+                  initial={{ opacity: 0, y: 0 }}
+                  animate={{
+                    opacity: phase === "idle" ? 0 : 1,
+                    y: cardRisen ? -220 : 0,
+                  }}
+                  transition={{
+                    opacity: { duration: 0.35, delay: phase === "opening" ? 0.2 : 0 },
+                    y: { duration: 0.78, ease: [0.22, 1, 0.36, 1] },
+                  }}
                 >
                   <div
                     className="rounded-lg px-5 py-5 text-center"
                     style={{
-                      background: "linear-gradient(170deg, #FFFFFF 0%, #FAF7F2 100%)",
-                      border: "1.5px solid rgba(212,175,55,0.42)",
+                      background: "linear-gradient(170deg, #FFFFFF 0%, #FBF8FC 100%)",
+                      border: "1.5px solid rgba(220,202,234,0.9)",
                       boxShadow: [
-                        "0 24px 60px rgba(45,27,94,0.28)",
-                        "0 6px 20px rgba(212,175,55,0.13)",
+                        "0 24px 60px rgba(76,58,95,0.22)",
+                        "0 6px 20px rgba(169,137,182,0.18)",
                       ].join(", "),
                     }}
                   >
-                    <p className="font-serif text-lg text-[#D8C4F1]">❀ ✦ ❀</p>
+                    <p className="font-serif text-lg text-[#DCCAEA]">❀ ✦ ❀</p>
                     <h2
-                      className="mt-1.5 font-serif text-[#2D1B5E]"
+                      className="mt-1.5 font-serif text-[#4C3A5F]"
                       style={{ fontSize: "clamp(1.1rem, 4vw, 1.75rem)", lineHeight: 1.2 }}
                     >
                       Juan & Taylor
                     </h2>
-                    <div className="mx-auto my-2.5 h-px w-12 bg-[#D4AF37]" />
+                    <div className="mx-auto my-2.5 h-px w-12 bg-[#A989B6]" />
                     <p
-                      className="uppercase tracking-[0.38em] text-[#D4AF37]"
+                      className="uppercase tracking-[0.38em] text-[#A989B6]"
                       style={{ fontSize: "clamp(0.5rem, 1.4vw, 0.63rem)" }}
                     >
                       7 November 2026
                     </p>
                     <p
-                      className="mt-1 text-[#7B6A9C]"
+                      className="mt-1 text-[#76647F]"
                       style={{ fontSize: "clamp(0.55rem, 1.4vw, 0.65rem)" }}
                     >
                       Nantes Estate · Paarl, South Africa
@@ -227,7 +227,7 @@ export default function EnvelopeIntro({ onComplete }) {
                             e.stopPropagation();
                             doExit();
                           }}
-                          className="mt-4 w-full rounded-full bg-[#2D1B5E] py-2.5 text-[10px] uppercase tracking-[0.4em] text-white shadow-md transition-all hover:bg-[#3D2878] hover:shadow-lg active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
+                          className="mt-4 w-full rounded-full bg-[#4C3A5F] py-2.5 text-[10px] uppercase tracking-[0.4em] text-white shadow-md transition-all hover:bg-[#6F587C] hover:shadow-lg active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#A989B6]"
                           aria-label="Enter website"
                         >
                           Enter Website
@@ -245,17 +245,16 @@ export default function EnvelopeIntro({ onComplete }) {
                     clipPath: "polygon(0 0, 100% 0, 50% 100%)",
                     transformOrigin: "50% 0%",
                     zIndex: 10,
-                    background: "linear-gradient(175deg, #4A3470 0%, #3D2878 70%, #2e1f60 100%)",
+                    background: "linear-gradient(175deg, #BFA9CA 0%, #9F82AE 70%, #7F6590 100%)",
                     willChange: "transform, opacity",
-                    filter: "drop-shadow(0 6px 14px rgba(45,27,94,0.40))",
+                    filter: "drop-shadow(0 6px 14px rgba(76,58,95,0.24))",
+                    backfaceVisibility: "hidden",
                   }}
                   animate={{
-                    rotateX: isOpen ? -155 : 0,
-                    opacity: isOpen ? 0 : 1,
+                    rotateX: isOpen ? -178 : 0,
                   }}
                   transition={{
-                    rotateX: { duration: 0.62, ease: [0.4, 0, 0.15, 1] },
-                    opacity: { duration: 0.48, delay: 0.12 },
+                    rotateX: { duration: 0.82, ease: [0.4, 0, 0.15, 1] },
                   }}
                 />
 
@@ -270,15 +269,15 @@ export default function EnvelopeIntro({ onComplete }) {
                       <div
                         className="flex h-12 w-12 items-center justify-center rounded-full"
                         style={{
-                          background: "radial-gradient(circle at 33% 33%, #EDCD4A, #B8921E)",
+                          background: "radial-gradient(circle at 33% 33%, #E7D7EF, #A989B6)",
                           boxShadow: [
-                            "0 4px 18px rgba(180,140,20,0.58)",
+                            "0 4px 18px rgba(76,58,95,0.24)",
                             "inset 0 1.5px 3px rgba(255,255,255,0.35)",
                             "inset 0 -1px 2px rgba(0,0,0,0.22)",
                           ].join(", "),
                         }}
                       >
-                        <span className="font-serif text-[11px] font-semibold leading-none text-[#2D1B5E]">
+                        <span className="font-serif text-[11px] font-semibold leading-none text-[#4C3A5F]">
                           J&T
                         </span>
                       </div>
@@ -303,12 +302,12 @@ export default function EnvelopeIntro({ onComplete }) {
                     onClick={doOpen}
                     whileHover={{ scale: 1.04 }}
                     whileTap={{ scale: 0.96 }}
-                    className="rounded-full bg-[#2D1B5E] px-10 py-3.5 text-xs uppercase tracking-[0.45em] text-white shadow-xl transition-colors hover:bg-[#3D2878] focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:ring-offset-2 focus:ring-offset-transparent"
+                    className="rounded-full bg-[#4C3A5F] px-10 py-3.5 text-xs uppercase tracking-[0.45em] text-white shadow-xl transition-colors hover:bg-[#6F587C] focus:outline-none focus:ring-2 focus:ring-[#A989B6] focus:ring-offset-2 focus:ring-offset-transparent"
                     aria-label="Open invitation"
                   >
                     Open Invitation
                   </motion.button>
-                  <p className="text-[9px] uppercase tracking-[0.5em] text-[#B0A0CC]">
+                  <p className="text-[9px] uppercase tracking-[0.5em] text-[#8F6FA0]">
                     Press Enter or Space
                   </p>
                 </motion.div>
