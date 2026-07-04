@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import EnvelopeIntro from "./components/EnvelopeIntro";
 import {
   MapPin, Gift, Heart, Mail,
-  Volume2, VolumeX, X, Sparkles, ExternalLink,
+  X, Sparkles, ExternalLink,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -64,7 +64,7 @@ const accommodation = [
 const dressCode = [
   {
     label: "Men",
-    text: "Beige chinos, white long-sleeve shirt.",
+    text: "Beige chinos, white long-sleeve shirt and brown dress shoes.",
     image: "/men.jpeg",
   },
   {
@@ -259,7 +259,7 @@ function HoneymoonFundSection({ fundSpotlight }) {
             animate={{ opacity: fundSpotlight ? [0.28, 0.72, 0.34] : [0.18, 0.34, 0.18] }}
             transition={{ duration: fundSpotlight ? 0.9 : 3.5, repeat: Infinity, ease: "easeInOut" }}
           />
-          <Card className="relative overflow-hidden rounded-[1.5rem] border-[#DCCAEA]/50 bg-gradient-to-br from-[#4C3A5F] via-[#6F587C] to-[#A989B6] shadow-2xl">
+          <Card className="relative overflow-hidden rounded-[1.5rem] border-[#DCCAEA]/70 bg-gradient-to-br from-[#F6EEF9] via-[#E7D7EF] to-[#D7BEDF] shadow-2xl">
             <AnimatePresence>{fundSpotlight && <HoneymoonCelebration />}</AnimatePresence>
             <CardContent className="relative p-10 sm:p-14">
               <AnimatePresence>
@@ -268,35 +268,35 @@ function HoneymoonFundSection({ fundSpotlight }) {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-4 py-2 text-xs font-medium uppercase tracking-[0.24em] text-white shadow-lg backdrop-blur"
+                    className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/60 px-4 py-2 text-xs font-medium uppercase tracking-[0.24em] text-[#4C3A5F] shadow-lg backdrop-blur"
                   >
                     <Sparkles size={14} /> Thank you for your RSVP
                   </motion.div>
                 )}
               </AnimatePresence>
               <div className="grid gap-10 md:grid-cols-2 md:items-center">
-                <div className="text-white">
+                <div className="text-[#4C3A5F]">
                   <motion.div
                     animate={{ rotate: fundSpotlight ? [0, -8, 8, 0] : 0, scale: fundSpotlight ? [1, 1.12, 1] : 1 }}
                     transition={{ duration: 0.7, repeat: fundSpotlight ? 3 : 0 }}
-                    className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-white/15 shadow-lg"
+                    className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-white/60 shadow-lg"
                   >
-                    <Gift className="text-[#F1E5F5]" size={38} />
+                    <Gift className="text-[#8F6FA0]" size={38} />
                   </motion.div>
                   <h3 className="font-serif text-4xl sm:text-5xl leading-tight">With grateful hearts</h3>
-                  <div className="my-5 h-px w-20 bg-[#E7D7EF]" />
-                  <p className="leading-7 text-white/80 italic text-sm sm:text-base">
+                  <div className="my-5 h-px w-20 bg-[#A989B6]" />
+                  <p className="leading-7 text-[#66536F] italic text-sm sm:text-base">
                     Should you wish to bless us with a gift, a contribution towards our honeymoon would be received with deep gratitude as we begin this new chapter together.
                   </p>
                 </div>
                 <div className="space-y-4">
-                  <div className="rounded-[1.5rem] bg-white/10 p-6 backdrop-blur border border-white/10 transition-colors hover:bg-white/15">
-                    <p className="text-xs uppercase tracking-[0.3em] text-[#F1E5F5] mb-3">EFT Details</p>
-                    <div className="space-y-2 text-sm text-white/80">
-                      <p><span className="text-white font-medium">Account Name:</span> Miss TN Brown</p>
-                      <p><span className="text-white font-medium">Bank:</span> Capitec</p>
-                      <p><span className="text-white font-medium">Account No:</span> 1654096839</p>
-                      <p><span className="text-white font-medium">Reference:</span> Honeymoon</p>
+                  <div className="rounded-[1.5rem] bg-white/55 p-6 backdrop-blur border border-white/60 transition-colors hover:bg-white/70">
+                    <p className="text-xs uppercase tracking-[0.3em] text-[#8F6FA0] mb-3">EFT Details</p>
+                    <div className="space-y-2 text-sm text-[#66536F]">
+                      <p><span className="text-[#4C3A5F] font-medium">Account Name:</span> Miss TN Brown</p>
+                      <p><span className="text-[#4C3A5F] font-medium">Bank:</span> Capitec</p>
+                      <p><span className="text-[#4C3A5F] font-medium">Account No:</span> 1654096839</p>
+                      <p><span className="text-[#4C3A5F] font-medium">Reference:</span> Honeymoon</p>
                     </div>
                   </div>
                 </div>
@@ -312,7 +312,6 @@ function HoneymoonFundSection({ fundSpotlight }) {
 // ─── Main component ───────────────────────────────────────────────────────────
 export default function WeddingWebsite() {
   const [introComplete, setIntroComplete] = useState(false);
-  const [musicOn, setMusicOn] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [rsvpSent, setRsvpSent] = useState(false);
   const [fundSpotlight, setFundSpotlight] = useState(false);
@@ -409,9 +408,6 @@ export default function WeddingWebsite() {
               ))}
             </div>
             <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon" onClick={() => setMusicOn(!musicOn)} className="text-[#4C3A5F]">
-                {musicOn ? <Volume2 size={18} /> : <VolumeX size={18} />}
-              </Button>
               <Button asChild className="rounded-full bg-[#A989B6] px-6 text-white hover:bg-[#9578A5]">
                 <a href="#rsvp">RSVP</a>
               </Button>
@@ -423,9 +419,9 @@ export default function WeddingWebsite() {
         <header
           id="home"
           className="relative z-10 flex min-h-screen items-center justify-center bg-cover bg-center px-4 text-center"
-          style={{ backgroundImage: `url(${heroImage})` }}
+          style={{ backgroundImage: `url(${heroImage})`, backgroundPosition: "center center" }}
         >
-          <div className="absolute inset-0 bg-gradient-to-b from-[#4C3A5F]/55 via-[#6F587C]/30 to-[#FCF7F2]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#4C3A5F]/38 via-[#6F587C]/18 to-[#FCF7F2]" />
           <motion.div
             initial={{ opacity: 0, y: 34 }}
             animate={{ opacity: 1, y: 0 }}
@@ -648,7 +644,6 @@ export default function WeddingWebsite() {
                       <option value="">Meal preference</option>
                       <option>Beef - Short Rib</option>
                       <option>Fish - Kingklip</option>
-                      <option>Vegan</option>
                     </select>
                     <textarea
                       className="min-h-24 resize-none rounded-2xl border border-[#DCCAEA] bg-white/70 p-4 outline-none focus:border-[#A989B6] focus:ring-1 focus:ring-[#A989B6] transition-colors"

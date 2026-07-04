@@ -60,7 +60,7 @@ export default function EnvelopeIntro({ onComplete }) {
         <motion.div
           key="envelope-intro"
           className="fixed inset-0 z-[200] flex select-none flex-col items-center justify-center"
-          style={{ background: "linear-gradient(145deg, #FBF8FC 0%, #EFE5F4 48%, #FBF8FC 100%)" }}
+          style={{ background: "linear-gradient(145deg, #FCF7F2 0%, #F2E8F5 48%, #FCF7F2 100%)" }}
           exit={{ opacity: 0, transition: { duration: 0.85, ease: "easeInOut" } }}
         >
           {/* ── Skip button ── */}
@@ -118,12 +118,12 @@ export default function EnvelopeIntro({ onComplete }) {
                 <div
                   className="absolute inset-0"
                   style={{
-                    background: "linear-gradient(155deg, #8F6FA0 0%, #6F587C 100%)",
+                    background: "linear-gradient(155deg, #E7D7EF 0%, #CDB2D8 100%)",
                     borderRadius: 6,
                     boxShadow: [
-                      "0 36px 80px rgba(76,58,95,0.34)",
-                      "0 10px 30px rgba(76,58,95,0.24)",
-                      "inset 0 0 0 1.5px rgba(255,255,255,0.18)",
+                      "0 36px 80px rgba(169,137,182,0.28)",
+                      "0 10px 30px rgba(169,137,182,0.2)",
+                      "inset 0 0 0 1.5px rgba(255,255,255,0.34)",
                     ].join(", "),
                   }}
                 />
@@ -133,7 +133,7 @@ export default function EnvelopeIntro({ onComplete }) {
                   className="absolute inset-x-0 bottom-0"
                   style={{
                     height: "55%",
-                    background: "linear-gradient(180deg, #6F587C 0%, #4C3A5F 100%)",
+                    background: "linear-gradient(180deg, #DCCAEA 0%, #BFA9CA 100%)",
                     clipPath: "polygon(0 100%, 50% 0%, 100% 100%)",
                     zIndex: 2,
                   }}
@@ -144,10 +144,10 @@ export default function EnvelopeIntro({ onComplete }) {
                   className="absolute inset-y-0 left-0"
                   style={{
                     width: "51%",
-                    background: "#7F6590",
+                    background: "#D6C0DF",
                     clipPath: "polygon(0 0, 100% 50%, 0 100%)",
                     zIndex: 3,
-                    filter: "brightness(0.9)",
+                    filter: "brightness(0.98)",
                   }}
                 />
 
@@ -156,10 +156,10 @@ export default function EnvelopeIntro({ onComplete }) {
                   className="absolute inset-y-0 right-0"
                   style={{
                     width: "51%",
-                    background: "#7F6590",
+                    background: "#D6C0DF",
                     clipPath: "polygon(100% 0, 0 50%, 100% 100%)",
                     zIndex: 3,
-                    filter: "brightness(0.9)",
+                    filter: "brightness(0.98)",
                   }}
                 />
 
@@ -221,7 +221,7 @@ export default function EnvelopeIntro({ onComplete }) {
                             e.stopPropagation();
                             doExit();
                           }}
-                          className="mt-4 w-full rounded-full bg-[#4C3A5F] py-2.5 text-[10px] uppercase tracking-[0.4em] text-white shadow-md transition-all hover:bg-[#6F587C] hover:shadow-lg active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#A989B6]"
+                          className="mt-4 w-full rounded-full bg-[#A989B6] py-2.5 text-[10px] uppercase tracking-[0.4em] text-white shadow-md transition-all hover:bg-[#9578A5] hover:shadow-lg active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#A989B6]"
                           aria-label="Enter website"
                         >
                           Enter Website
@@ -239,9 +239,9 @@ export default function EnvelopeIntro({ onComplete }) {
                     clipPath: "polygon(0 0, 100% 0, 50% 100%)",
                     transformOrigin: "50% 0%",
                     zIndex: 10,
-                    background: "linear-gradient(175deg, #BFA9CA 0%, #9F82AE 70%, #7F6590 100%)",
+                    background: "linear-gradient(175deg, #F1E5F5 0%, #DCCAEA 68%, #CDB2D8 100%)",
                     willChange: "transform, opacity",
-                    filter: "drop-shadow(0 6px 14px rgba(76,58,95,0.24))",
+                    filter: "drop-shadow(0 6px 14px rgba(169,137,182,0.22))",
                     backfaceVisibility: "hidden",
                   }}
                   animate={{
@@ -296,7 +296,7 @@ export default function EnvelopeIntro({ onComplete }) {
                     onClick={doOpen}
                     whileHover={{ scale: 1.04 }}
                     whileTap={{ scale: 0.96 }}
-                    className="rounded-full bg-[#4C3A5F] px-10 py-3.5 text-xs uppercase tracking-[0.45em] text-white shadow-xl transition-colors hover:bg-[#6F587C] focus:outline-none focus:ring-2 focus:ring-[#A989B6] focus:ring-offset-2 focus:ring-offset-transparent"
+                    className="rounded-full bg-[#A989B6] px-10 py-3.5 text-xs uppercase tracking-[0.45em] text-white shadow-xl transition-colors hover:bg-[#9578A5] focus:outline-none focus:ring-2 focus:ring-[#A989B6] focus:ring-offset-2 focus:ring-offset-transparent"
                     aria-label="Open invitation"
                   >
                     Open Invitation
