@@ -12,7 +12,7 @@ import { Card, CardContent } from "@/components/ui/card";
 const weddingDate = new Date("2026-11-07T15:00:00");
 const cn = (...classes) => classes.filter(Boolean).join(" ");
 const venueMapUrl = "https://share.google/noKylCZkx6zRfIjFS";
-const heroImage = "/IMG_7434.JPG";
+const heroImage = "/IMG_7344.JPG";
 const rsvpWhatsappNumber = "27649818636";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
