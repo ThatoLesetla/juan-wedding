@@ -199,15 +199,9 @@ export default function EnvelopeIntro({ onComplete }) {
                       className="mt-1.5 font-serif text-[#4C3A5F]"
                       style={{ fontSize: "clamp(1.1rem, 4vw, 1.75rem)", lineHeight: 1.2 }}
                     >
-                      Wedding of <br></br>Juan & Taylor
+                      Taylor & Juan's <br></br>Wedding
                     </h2>
                     <div className="mx-auto my-2.5 h-px w-12 bg-[#A989B6]" />
-                    <p
-                      className="uppercase tracking-[0.38em] text-[#A989B6]"
-                      style={{ fontSize: "clamp(0.5rem, 1.4vw, 0.63rem)" }}
-                    >
-                      7 November 2026
-                    </p>
                     <p
                       className="mt-1 text-[#76647F]"
                       style={{ fontSize: "clamp(0.55rem, 1.4vw, 0.65rem)" }}
