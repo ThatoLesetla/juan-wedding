@@ -563,9 +563,8 @@ export default function WeddingWebsite() {
                       onChange={(e) => setRsvpForm({ ...rsvpForm, meal: e.target.value })}
                     >
                       <option value="">Meal preference</option>
-                      <option>Chicken</option>
                       <option>Beef</option>
-                      <option>Vegetarian</option>
+                      <option>Fish</option>
                       <option>Vegan</option>
                     </select>
                     <textarea
