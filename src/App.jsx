@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import EnvelopeIntro from "./components/EnvelopeIntro";
 import {
@@ -13,6 +13,7 @@ const weddingDate = new Date("2026-11-07T15:00:00");
 const cn = (...classes) => classes.filter(Boolean).join(" ");
 const venueMapUrl = "https://maps.app.goo.gl/yS1cqqnQfjnew8yd6?g_st=ic";
 const heroImage = "/IMG_7434.JPG";
+const rsvpWhatsappNumber = "27684070734";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 const journeyPhotos = [
@@ -22,8 +23,7 @@ const journeyPhotos = [
   "/IMG_7432.JPG",
   "/IMG_7433.JPG",
   "/IMG_7434.JPG",
-  "/IMG_7458.JPG",
-  "/IMG_7459.JPG",
+  "/IMG_7458.JPG"
 ];
 
 const accommodation = [
@@ -33,7 +33,7 @@ const accommodation = [
     distance: "2 min from venue",
     tier: "Most budget-friendly",
     mapUrl: "https://maps.google.com/?q=Nantes+Vue+Guest+House+Paarl",
-    img: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80",
+    img: "https://b-cdn.springnest.com/media/img/1km/nantesvue__-1072d64f8a.jpg?width=560",
   },
   {
     name: "Under Oaks Guesthouse",
@@ -41,7 +41,7 @@ const accommodation = [
     distance: "5 min from venue",
     tier: "Budget-friendly",
     mapUrl: "https://maps.google.com/?q=Under+Oaks+Guesthouse+Paarl",
-    img: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=600&q=80",
+    img: "https://underoaks.co.za/wp-content/uploads/2024/10/www.lizellelotter.co_.zaJune24-37.jpg",
   },
   {
     name: "Zonnevanger Venue & Guesthouse",
@@ -49,7 +49,7 @@ const accommodation = [
     distance: "8 min from venue",
     tier: "Moderate",
     mapUrl: "https://maps.google.com/?q=Zonnevanger+Venue+and+Guesthouse+Paarl",
-    img: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=600&q=80",
+    img: "https://zonnevanger.co.za/wp-content/uploads/2026/04/2.jpg",
   },
   {
     name: "Cana Vineyard Guesthouse",
@@ -57,9 +57,112 @@ const accommodation = [
     distance: "10 min from venue",
     tier: "Refined stay",
     mapUrl: "https://maps.google.com/?q=Cana+Vineyard+Guesthouse+Paarl",
-    img: "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&w=600&q=80",
+    img: "https://canaguesthouse.co.za/wp-content/uploads/2019/04/Standard-Mountain-1.jpg",
   },
 ];
+
+const dressCode = [
+  {
+    label: "Men",
+    text: "Long white shirt paired with tailored beige pants.",
+    image: "/men.jpeg",
+  },
+  {
+    label: "Women",
+    text: "Elegant dresses in soft pastel tones with heels.",
+    image: "/women.jpeg",
+  },
+];
+
+const confettiPieces = Array.from({ length: 34 }, (_, index) => ({
+  id: `confetti-${index}`,
+  left: `${6 + ((index * 17) % 88)}%`,
+  drift: index % 2 === 0 ? 28 : -28,
+  delay: (index % 9) * 0.08,
+  duration: 2.1 + (index % 5) * 0.16,
+  rotate: index % 2 === 0 ? 210 : -190,
+  color: ["#F1E5F5", "#DCCAEA", "#FFFFFF", "#A989B6", "#F7DFA6"][index % 5],
+  width: index % 3 === 0 ? 8 : 6,
+  height: index % 4 === 0 ? 16 : 11,
+}));
+
+const fireworkBursts = [
+  { id: "left", left: "18%", top: "25%", delay: 0.05 },
+  { id: "center", left: "50%", top: "18%", delay: 0.24 },
+  { id: "right", left: "82%", top: "30%", delay: 0.42 },
+];
+
+function HoneymoonCelebration() {
+  return (
+    <motion.div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 z-20 overflow-hidden"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.25 }}
+    >
+      {fireworkBursts.map((burst) => (
+        <div
+          key={burst.id}
+          className="absolute"
+          style={{ left: burst.left, top: burst.top }}
+        >
+          {Array.from({ length: 12 }, (_, ray) => {
+            const angle = ray * 30;
+            return (
+              <motion.span
+                key={ray}
+                className="absolute left-0 top-0 h-1.5 w-1.5 rounded-full bg-white shadow-[0_0_14px_rgba(255,255,255,0.95)]"
+                initial={{ opacity: 0, scale: 0, x: 0, y: 0 }}
+                animate={{
+                  opacity: [0, 1, 0],
+                  scale: [0.4, 1, 0.2],
+                  x: Math.cos((angle * Math.PI) / 180) * 58,
+                  y: Math.sin((angle * Math.PI) / 180) * 58,
+                }}
+                transition={{
+                  duration: 1.2,
+                  delay: burst.delay,
+                  repeat: 2,
+                  repeatDelay: 0.7,
+                  ease: "easeOut",
+                }}
+              />
+            );
+          })}
+        </div>
+      ))}
+
+      {confettiPieces.map((piece) => (
+        <motion.span
+          key={piece.id}
+          className="absolute top-[-12%] rounded-sm"
+          style={{
+            left: piece.left,
+            width: piece.width,
+            height: piece.height,
+            backgroundColor: piece.color,
+          }}
+          initial={{ opacity: 0, y: -40, rotate: 0 }}
+          animate={{
+            opacity: [0, 1, 1, 0],
+            y: ["0%", "78vh"],
+            x: [0, piece.drift, 0],
+            rotate: piece.rotate,
+          }}
+          transition={{
+            duration: piece.duration,
+            delay: piece.delay,
+            repeat: 1,
+            repeatDelay: 0.25,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+    </motion.div>
+  );
+}
 
 // ─── Hooks ────────────────────────────────────────────────────────────────────
 function useCountdown(targetDate) {
@@ -80,7 +183,7 @@ function useCountdown(targetDate) {
 // ─── Shared components ────────────────────────────────────────────────────────
 function Section({ id, eyebrow, title, children, className }) {
   return (
-    <section id={id} className={cn("relative px-4 py-24 sm:px-6 lg:px-8", className)}>
+    <section id={id} className={cn("relative px-4 py-14 sm:px-6 sm:py-16 lg:px-8 lg:py-18", className)}>
       <div className="mx-auto max-w-7xl">
         {(eyebrow || title) && (
           <motion.div
@@ -88,7 +191,7 @@ function Section({ id, eyebrow, title, children, className }) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.7 }}
-            className="mx-auto mb-14 max-w-3xl text-center"
+            className="mx-auto mb-8 max-w-3xl text-center sm:mb-10"
           >
             {eyebrow && (
               <p className="mb-3 text-xs font-semibold uppercase tracking-[0.4em] text-[#A989B6]">{eyebrow}</p>
@@ -140,10 +243,75 @@ export default function WeddingWebsite() {
   const [musicOn, setMusicOn] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [rsvpSent, setRsvpSent] = useState(false);
+  const [fundSpotlight, setFundSpotlight] = useState(false);
+  const fundSpotlightTimer = useRef(null);
   const [rsvpForm, setRsvpForm] = useState({
     name: "", email: "", attending: "", attendance: "Joyfully attending",
     meal: "", dietary: "",
   });
+
+  useEffect(() => {
+    const previousScrollRestoration = window.history.scrollRestoration;
+    const previousScrollBehavior = document.documentElement.style.scrollBehavior;
+
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+
+    if (window.location.hash) {
+      window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+    }
+
+    const scrollToTop = () => {
+      document.documentElement.style.scrollBehavior = "auto";
+      window.scrollTo(0, 0);
+      document.documentElement.style.scrollBehavior = previousScrollBehavior;
+    };
+
+    scrollToTop();
+    const animationFrame = window.requestAnimationFrame(scrollToTop);
+    const timer = window.setTimeout(scrollToTop, 100);
+
+    return () => {
+      window.cancelAnimationFrame(animationFrame);
+      window.clearTimeout(timer);
+      if ("scrollRestoration" in window.history) {
+        window.history.scrollRestoration = previousScrollRestoration;
+      }
+      document.documentElement.style.scrollBehavior = previousScrollBehavior;
+    };
+  }, []);
+
+  const spotlightFund = () => {
+    window.clearTimeout(fundSpotlightTimer.current);
+    setFundSpotlight(true);
+    document.getElementById("fund")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    fundSpotlightTimer.current = window.setTimeout(() => setFundSpotlight(false), 5000);
+  };
+
+  const sendRsvpToWhatsapp = () => {
+    const message = [
+      "New RSVP for Juan & Taylor's wedding",
+      "",
+      `Name: ${rsvpForm.name || "Not supplied"}`,
+      `Email: ${rsvpForm.email || "Not supplied"}`,
+      `Meal preference: ${rsvpForm.meal || "Not supplied"}`,
+      `Dietary restrictions/allergies: ${rsvpForm.dietary || "None supplied"}`,
+    ].join("\n");
+    const whatsappUrl = `https://wa.me/${rsvpWhatsappNumber}?text=${encodeURIComponent(message)}`;
+    const whatsappLink = document.createElement("a");
+    whatsappLink.href = whatsappUrl;
+    whatsappLink.target = "_blank";
+    whatsappLink.rel = "noopener noreferrer";
+    whatsappLink.click();
+  };
+
+  const handleRsvpSubmit = (event) => {
+    event.preventDefault();
+    sendRsvpToWhatsapp();
+    setRsvpSent(true);
+    window.setTimeout(spotlightFund, 850);
+  };
 
   return (
     <>
@@ -273,7 +441,8 @@ export default function WeddingWebsite() {
                     <p className="mt-2 text-sm leading-7 text-[#66536F]">Paarl, Western Cape, South Africa</p>
                   </div>
                   <div className="space-y-4 text-sm leading-7 text-[#66536F]">
-                    <p><span className="font-semibold text-[#4C3A5F]">Ceremony time:</span> TBC — we will confirm soon</p>
+                    <p><span className="font-semibold text-[#4C3A5F]">Arrival:</span> 10:00 AM</p>
+                    <p><span className="font-semibold text-[#4C3A5F]">Ceremony starts:</span> 11:00 AM</p>
                     <p><span className="font-semibold text-[#4C3A5F]">Reception:</span> To follow at the same venue</p>
                     <p className="italic text-[#76647F]">
                       We kindly invite you to share in a day of love, thanksgiving, dinner, and celebration as we begin married life together.
@@ -294,25 +463,29 @@ export default function WeddingWebsite() {
         </Section>
 
         {/* ── DRESS CODE ── */}
-        <Section id="dresscode" eyebrow="Dress Code" title="With soft pastel elegance">
+        <Section id="dresscode" eyebrow="Dress Code" title="Formal attire requested">
           <div className="mx-auto grid max-w-4xl gap-6 md:grid-cols-2">
-            {[
-              ["Men", "Formal suit with dress shoes. Ties are optional."],
-              ["Women", "Elegant dresses in soft pastel tones with heels."],
-            ].map(([label, text], index) => (
+            {dressCode.map((attire, index) => (
               <motion.div
-                key={label}
+                key={attire.label}
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card className="h-full rounded-[1.5rem] border-[#DCCAEA]/70 bg-white/85 shadow-lg backdrop-blur">
-                  <CardContent className="p-8">
+                <Card className="h-full overflow-hidden rounded-[1.5rem] border-[#DCCAEA]/70 bg-white/85 shadow-lg backdrop-blur">
+                  <div className="aspect-[3/4] w-full overflow-hidden bg-[#F4EDF8]">
+                    <img
+                      src={attire.image}
+                      alt={`${attire.label} formal attire inspiration`}
+                      className="h-full w-full object-cover object-top"
+                    />
+                  </div>
+                  <CardContent className="p-7">
                     <Sparkles size={24} className="mb-5 text-[#A989B6]" />
-                    <h3 className="font-serif text-3xl text-[#4C3A5F]">{label}</h3>
+                    <h3 className="font-serif text-3xl text-[#4C3A5F]">{attire.label}</h3>
                     <div className="my-4 h-px w-16 bg-[#DCCAEA]" />
-                    <p className="text-sm leading-7 text-[#66536F]">{text}</p>
+                    <p className="text-sm leading-7 text-[#66536F]">{attire.text}</p>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -337,7 +510,6 @@ export default function WeddingWebsite() {
                     <h3 className="font-serif text-lg text-[#4C3A5F] leading-snug">{place.name}</h3>
                     <p className="mt-1 text-xs text-[#A989B6] uppercase tracking-wide">{place.distance}</p>
                     <p className="mt-2 inline-flex rounded-full bg-[#F4EDF8] px-3 py-1 text-[11px] uppercase tracking-[0.18em] text-[#76647F]">{place.tier}</p>
-                    <p className="mt-3 text-sm leading-6 text-[#66536F]">{place.description}</p>
                     <a
                       href={place.mapUrl}
                       target="_blank"
@@ -352,45 +524,6 @@ export default function WeddingWebsite() {
             ))}
           </div>
 
-        </Section>
-
-        {/* ── FOOD OPTIONS ── */}
-        <Section id="food" eyebrow="Dining" title="Food Options">
-          <Card className="mx-auto max-w-3xl rounded-[1.5rem] border-[#DCCAEA]/70 bg-white/85 shadow-xl backdrop-blur">
-            <CardContent className="p-8 sm:p-12">
-              <div className="mb-8 text-center">
-                <FloralDivider />
-                <p className="mt-4 text-sm leading-7 text-[#66536F]">
-                  We would love for every guest to be comfortably cared for. Kindly share your meal preference and any dietary requirements when you RSVP.
-                </p>
-              </div>
-              <div className="grid gap-6 sm:grid-cols-2">
-                <div className="rounded-[1.25rem] bg-[#FBF8FC] p-6 border border-[#DCCAEA]/50">
-                  <h3 className="font-serif text-2xl text-[#4C3A5F]">Menu</h3>
-                  <GoldDivider />
-                  <ul className="space-y-3 text-sm text-[#66536F]">
-                    <li className="flex items-center gap-3"><span className="text-[#A989B6]">✦</span> Chicken</li>
-                    <li className="flex items-center gap-3"><span className="text-[#A989B6]">✦</span> Beef</li>
-                    <li className="flex items-center gap-3"><span className="text-[#A989B6]">✦</span> Vegetarian</li>
-                    <li className="flex items-center gap-3"><span className="text-[#A989B6]">✦</span> Vegan</li>
-                  </ul>
-                </div>
-                <div className="rounded-[1.25rem] bg-[#FBF8FC] p-6 border border-[#DCCAEA]/50">
-                  <h3 className="font-serif text-2xl text-[#4C3A5F]">Dietary Needs</h3>
-                  <GoldDivider />
-                  <p className="text-sm leading-7 text-[#66536F]">
-                    Please note any allergies or restrictions in your RSVP. We will do our best to accommodate everyone.
-                  </p>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {["Gluten-free", "Dairy-free", "Nut allergy", "Halal", "Kosher"].map((tag) => (
-                      <span key={tag} className="rounded-full border border-[#DCCAEA] px-3 py-1 text-xs text-[#76647F]">{tag}</span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <p className="mt-6 text-center text-xs italic text-[#76647F]">Please indicate your preferences in the RSVP form below.</p>
-            </CardContent>
-          </Card>
         </Section>
 
         {/* ── RSVP ── */}
@@ -408,14 +541,14 @@ export default function WeddingWebsite() {
                     <Mail className="mx-auto text-[#A989B6]" size={42} />
                     <h3 className="mt-4 font-serif text-3xl text-[#4C3A5F]">Thank you</h3>
                     <p className="mt-3 leading-7 text-[#66536F]">
-                      Your RSVP has been received with love. We cannot wait to celebrate with you.
+                      Your WhatsApp RSVP is ready to send. We cannot wait to celebrate with you.
                     </p>
                   </motion.div>
                 ) : (
                   <motion.form
                     key="form"
                     className="grid gap-4"
-                    onSubmit={(e) => { e.preventDefault(); setRsvpSent(true); }}
+                    onSubmit={handleRsvpSubmit}
                   >
                     <input
                       className="rounded-2xl border border-[#DCCAEA] bg-white/70 p-4 outline-none focus:border-[#A989B6] focus:ring-1 focus:ring-[#A989B6] transition-colors"
@@ -424,32 +557,6 @@ export default function WeddingWebsite() {
                       value={rsvpForm.name}
                       onChange={(e) => setRsvpForm({ ...rsvpForm, name: e.target.value })}
                     />
-                    <input
-                      className="rounded-2xl border border-[#DCCAEA] bg-white/70 p-4 outline-none focus:border-[#A989B6] focus:ring-1 focus:ring-[#A989B6] transition-colors"
-                      type="email"
-                      placeholder="Email address"
-                      required
-                      value={rsvpForm.email}
-                      onChange={(e) => setRsvpForm({ ...rsvpForm, email: e.target.value })}
-                    />
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <input
-                        className="rounded-2xl border border-[#DCCAEA] bg-white/70 p-4 outline-none focus:border-[#A989B6] focus:ring-1 focus:ring-[#A989B6] transition-colors"
-                        type="number"
-                        min="1"
-                        placeholder="Number attending"
-                        value={rsvpForm.attending}
-                        onChange={(e) => setRsvpForm({ ...rsvpForm, attending: e.target.value })}
-                      />
-                      <select
-                        className="rounded-2xl border border-[#DCCAEA] bg-white/70 p-4 outline-none focus:border-[#A989B6] transition-colors"
-                        value={rsvpForm.attendance}
-                        onChange={(e) => setRsvpForm({ ...rsvpForm, attendance: e.target.value })}
-                      >
-                        <option>Joyfully attending</option>
-                        <option>Sadly cannot attend</option>
-                      </select>
-                    </div>
                     <select
                       className="rounded-2xl border border-[#DCCAEA] bg-white/70 p-4 outline-none focus:border-[#A989B6] transition-colors"
                       value={rsvpForm.meal}
@@ -468,7 +575,7 @@ export default function WeddingWebsite() {
                       onChange={(e) => setRsvpForm({ ...rsvpForm, dietary: e.target.value })}
                     />
                     <Button className="rounded-full bg-[#A989B6] py-6 text-white hover:bg-[#9578A5] text-base">
-                      Send RSVP ✦
+                      Send RSVP via WhatsApp ✦
                     </Button>
                   </motion.form>
                 )}
@@ -485,43 +592,64 @@ export default function WeddingWebsite() {
             viewport={{ once: true }}
             className="mx-auto max-w-4xl"
           >
-            <Card className="overflow-hidden rounded-[1.5rem] border-[#DCCAEA]/50 bg-gradient-to-br from-[#4C3A5F] via-[#6F587C] to-[#A989B6] shadow-xl">
-              <CardContent className="p-10 sm:p-14">
-                <div className="grid gap-10 md:grid-cols-2 md:items-center">
-                  <div className="text-white">
-                    <Gift className="mb-5 text-[#F1E5F5]" size={38} />
-                    <h3 className="font-serif text-4xl sm:text-5xl leading-tight">With grateful hearts</h3>
-                    <div className="my-5 h-px w-20 bg-[#E7D7EF]" />
-                    <p className="leading-7 text-white/80 italic text-sm sm:text-base">
-                      Should you wish to bless us with a gift, a contribution towards our honeymoon would be received with deep gratitude as we begin this new chapter together.
-                    </p>
-                  </div>
-                  <div className="space-y-4">
-                    <div className="rounded-[1.5rem] bg-white/10 p-6 backdrop-blur border border-white/10">
-                      <p className="text-xs uppercase tracking-[0.3em] text-[#F1E5F5] mb-3">EFT Details</p>
-                      <div className="space-y-2 text-sm text-white/80">
-                        <p><span className="text-white font-medium">Account Name:</span> Miss TN Brown</p>
-                        <p><span className="text-white font-medium">Bank:</span> Capitec</p>
-                        <p><span className="text-white font-medium">Account No:</span> 1654096839</p>
-                        <p><span className="text-white font-medium">Reference:</span> Honeymoon</p>
+            <motion.div
+              animate={fundSpotlight ? { scale: [1, 1.025, 1], y: [0, -8, 0] } : { scale: 1, y: 0 }}
+              transition={{ duration: 0.9, repeat: fundSpotlight ? 2 : 0, ease: "easeInOut" }}
+              whileHover={{ y: -6 }}
+              whileTap={{ scale: 0.99 }}
+              className="relative"
+            >
+              <motion.div
+                aria-hidden="true"
+                className="absolute -inset-4 rounded-[2rem] bg-[#DCCAEA]/55 blur-2xl"
+                animate={{ opacity: fundSpotlight ? [0.28, 0.72, 0.34] : [0.14, 0.25, 0.14] }}
+                transition={{ duration: fundSpotlight ? 0.9 : 3.5, repeat: Infinity, ease: "easeInOut" }}
+              />
+              <Card className="relative overflow-hidden rounded-[1.5rem] border-[#DCCAEA]/50 bg-gradient-to-br from-[#4C3A5F] via-[#6F587C] to-[#A989B6] shadow-2xl">
+                <AnimatePresence>{fundSpotlight && <HoneymoonCelebration />}</AnimatePresence>
+                <CardContent className="relative p-10 sm:p-14">
+                  <AnimatePresence>
+                    {fundSpotlight && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-4 py-2 text-xs font-medium uppercase tracking-[0.24em] text-white shadow-lg backdrop-blur"
+                      >
+                        <Sparkles size={14} /> Thank you for your RSVP
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                  <div className="grid gap-10 md:grid-cols-2 md:items-center">
+                    <div className="text-white">
+                      <motion.div
+                        animate={{ rotate: fundSpotlight ? [0, -8, 8, 0] : 0, scale: fundSpotlight ? [1, 1.12, 1] : 1 }}
+                        transition={{ duration: 0.7, repeat: fundSpotlight ? 3 : 0 }}
+                        className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-white/15 shadow-lg"
+                      >
+                        <Gift className="text-[#F1E5F5]" size={38} />
+                      </motion.div>
+                      <h3 className="font-serif text-4xl sm:text-5xl leading-tight">With grateful hearts</h3>
+                      <div className="my-5 h-px w-20 bg-[#E7D7EF]" />
+                      <p className="leading-7 text-white/80 italic text-sm sm:text-base">
+                        Should you wish to bless us with a gift, a contribution towards our honeymoon would be received with deep gratitude as we begin this new chapter together.
+                      </p>
+                    </div>
+                    <div className="space-y-4">
+                      <div className="rounded-[1.5rem] bg-white/10 p-6 backdrop-blur border border-white/10 transition-colors hover:bg-white/15">
+                        <p className="text-xs uppercase tracking-[0.3em] text-[#F1E5F5] mb-3">EFT Details</p>
+                        <div className="space-y-2 text-sm text-white/80">
+                          <p><span className="text-white font-medium">Account Name:</span> Miss TN Brown</p>
+                          <p><span className="text-white font-medium">Bank:</span> Capitec</p>
+                          <p><span className="text-white font-medium">Account No:</span> 1654096839</p>
+                          <p><span className="text-white font-medium">Reference:</span> Honeymoon</p>
+                        </div>
                       </div>
                     </div>
-                    <div className="rounded-[1.5rem] bg-white/10 p-6 backdrop-blur border border-white/10">
-                      <p className="text-xs uppercase tracking-[0.3em] text-[#F1E5F5] mb-3">Quick Payment</p>
-                      <p className="text-sm leading-6 text-white/80">
-                        A QR code or secure payment link can be added here once the final payment option is supplied.
-                      </p>
-                      <a
-                        href="mailto:hello@juanandtaylor.co.za?subject=Honeymoon%20fund%20payment%20details"
-                        className="mt-5 inline-flex w-full items-center justify-center rounded-full border border-white/45 px-5 py-3 text-sm text-white transition-colors hover:bg-white/10"
-                      >
-                        Request payment link
-                      </a>
-                    </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </motion.div>
           </motion.div>
         </Section>
 
