@@ -13,7 +13,7 @@ const weddingDate = new Date("2026-11-07T15:00:00");
 const cn = (...classes) => classes.filter(Boolean).join(" ");
 const venueMapUrl = "https://maps.app.goo.gl/yS1cqqnQfjnew8yd6?g_st=ic";
 const heroImage = "/IMG_7434.JPG";
-const rsvpWhatsappNumber = "27684070734";
+const rsvpWhatsappNumber = "27649818636";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 const journeyPhotos = [
