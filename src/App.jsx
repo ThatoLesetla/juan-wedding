@@ -434,8 +434,8 @@ export default function WeddingWebsite() {
             </h1>
             <GoldDivider />
             <p className="mx-auto max-w-2xl text-lg italic text-white/90 sm:text-xl leading-8">
-              Request the honour of your presence as they enter<br className="hidden sm:block" />
-              the sacred covenant of marriage.
+              Request the honour of your presence as they <br className="hidden sm:block" />
+              enter the sacred covenant of marriage.
             </p>
 
             {/* Venue */}
